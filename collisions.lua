@@ -11,24 +11,51 @@ function p:check_boundaries()
   end
   if p.py + p.vy <= 0 then
     p.vy = 0
+    p.onground = true
     p.py = 0
   end
   if p.py + 7 + p.vy >= 112 then
     p.vy = 0
+    p.onground = true
     p.py = 104
   end
 end
 
 function p:resolve_collision()
+  p.onground=false
+  if p.vy > 0 and (flag(-p.vx+(64-mx),-p.vy+(64-my),0) or flag(-p.vx+(64-mx)+7,-p.vy+(64-my),0)) then
+    p.vy,my=0,ceil(my/8)*8
+    p.jtm=0
+  end
+  if p.vy <= 0 and (flag(-p.vx+(64-mx),-p.vy+(64-my)+8,0) or flag(-p.vx+(64-mx)+7,-p.vy+(64-my)+8,0)) then
+    p.vy,my,p.onground=0,flr(my/8)*8,true
+  end
+  if p.vx > 0 and (flag(-p.vx+(64-mx),-p.vy+(64-my),0) or flag(-p.vx+(64-mx),-p.vy+(64-my)+7,0)) then
+    p.vx,mx=0,ceil(mx/8)*8
+  end
+  if p.vx < 0 and (flag(-p.vx+(64-mx)+7,-p.vy+(64-my),0) or flag(-p.vx+(64-mx)+7,-p.vy+(64-my)+7,0)) then
+    p.vx,mx=0,flr(mx/8)*8
+  end
+end
+
+function p:resolve_collision_old()
   if p.vx == 0 and p.vy == 0 then return end
 
-  local nx = (64 - (mx+p.vx))
-  local ny = (64 - (my+p.vy))
+  local px_tl = 64 - mx
+  local py_tl = 64 - my
+  local nx_tl = (64 - (mx+p.vx))
+  local ny_tl = (64 - (my+p.vy))
 
-  local tl = flag(nx, ny, 0)
-  local tr = flag(nx + 7, ny, 0)
-  local bl = flag(nx, ny + 7, 0)
-  local br = flag(nx + 7, ny + 7, 0)
+  if p.vy > 0 or not (flag(nx_tl, ny_tl + 8, 0) or flag(nx_tl + 7, ny_tl + 8, 0)) then
+    p.onground = false
+  end
+
+  local inc_y = 7
+
+  local tl = flag(nx_tl, ny_tl, 0)
+  local tr = flag(nx_tl + 7, ny_tl, 0)
+  local bl = flag(nx_tl, ny_tl + inc_y, 0)
+  local br = flag(nx_tl + 7, ny_tl + inc_y, 0)
 
   local hit_left = flr((mx+p.vx)/8) * 8
   local hit_top = flr((my+p.vy)/8) * 8
@@ -45,6 +72,7 @@ function p:resolve_collision()
       if br or bl then
         my = hit_bottom
         p.vy = 0
+        p.onground = true
       end
     end
     p:check_boundaries()
@@ -78,74 +106,91 @@ function p:resolve_collision()
         mx = hit_left
       end
       if tl then
-        local px = 64 - mx
-        local py = 64 - my
+        local px = px_tl
+        local py = py_tl
+        local nx = nx_tl
+        local ny = ny_tl
         local dx = nx - px
         local dy = ny - py
         local hy = py + (dx * (dy/dx))
         local tile_y_max = (ceil(ny/8) * 8) - 1
         if py < tile_y_max then
-          debug = "track"
-          debug2 = tostring(tile_y_max)
-          debug3 = py
           p.vx = 0
           mx = hit_left
           return
         end
-        local tile_x_max = flr(nx/8) * 8
-        if px < tile_x_max + 7 then
-          debug = "track2"
-          debug2 = tostring(tile_y_max)
-          debug3 = py
+        local tile_x_max = 7 + flr(nx/8) * 8
+        if nx == tile_x_max and ny == tile_y_max then
+          if tr and not bl then
+            p.vy = 0
+          elseif bl and not tr then
+            p.vx = 0
+          elseif (tr and bl) then
+            p.vx = 0
+            p.vy = 0
+          elseif not (tr or bl) then
+            p.vy = 0
+          end
+          return
+        end
+        if px < tile_x_max then
           p.vy = 0
           my = hit_top
           return
         end
-        if hy < tile_y_max then
-          debug = "track3"
-          debug2 = tostring(tile_y_max)
-          debug3 = hy
+        if hy <= tile_y_max then
           p.vx = 0
           mx = hit_left
-        elseif hy > tile_y_max then
-          debug = "track4"
-          p.vx = 0
-          mx = hit_left
+          return
         end
       end
     else -- UP RIGHT
       if tl then
         p.vy = 0
-        p.py = ceil(ny/8) * 8
+        my = hit_top
       end
       if br then
         p.vx = 0
-        p.px = flr(nx/8) * 8
+        mx = hit_right
       end
       if tr then
-        local px = mx + 64
-        local py = my + 64
-        local dx = nx - px
-        local dy = py - ny
+        local px = 7 + px_tl
+        local py = py_tl
+        local nx = 7 + nx_tl
+        local ny = ny_tl
+        local dx = px - nx
+        local dy = ny - py
         local hy = py + (dx * (dy/dx))
-        local tile_y_max = (flr(ny/8) * 8) + 7
+        local tile_y_max = (ceil(ny/8) * 8) - 1
         if py < tile_y_max then
           p.vx = 0
-          p.px = (flr(nx/8) * 8) - 8
+          mx = hit_right
           return
         end
-        local tile_x = flr(nx/8) * 8
-        if px > tile_x + p.vx then
+        local tile_x_min = flr(nx/8) * 8
+        if nx == tile_x_min and ny == tile_y_max then
+          if tl and not br then
+            p.vy = 0
+          elseif br and not tl then
+            p.vx = 0
+          elseif (tl and br) then
+            p.vx = 0
+            p.vy = 0
+          elseif not (tl or br) then
+            p.vy = 0
+          end
+          return
+        end
+        if px > tile_x_min then
+          debug = "pollo"
           p.vy = 0
-          p.py = tile_y_max + 1
+          my = hit_top
           return
         end
         if hy <= tile_y_max then
           p.vx = 0
-          p.px = flr(nx/8) * 8
-        else
-          p.vy = 0
-          p.py = tile_y_max + 1
+          mx = hit_right
+          return
         end
       end
     end
@@ -153,71 +198,107 @@ function p:resolve_collision()
     if p.vx > 0 then -- DOWN LEFT
       if br then
         p.vy = 0
-        p.py = flr(ny/8) * 8
+        my = hit_bottom
+        p.onground = true
       end
       if tl then
         p.vx = 0
-        p.px = ceil(nx/8) * 8
+        mx = hit_left
       end
       if bl then
-        local px = p.px
-        local py = p.py + 7
-        local dx = px - nx
-        local dy = ny - py
-        local hy = py + (dx * (dy/dx))
-        local tile_y_min = flr(ny/8) * 8
-        if py > tile_y_min then
-          p.vx = 0
-          p.px = ceil(px/8) * 8
-          return
-        end
-        local tile_x = flr(nx/8) * 8
-        if px < tile_x + 7 then
-          p.vy = 0
-          p.py = tile_y_min - 8
-          return
-        end
-        if hy >= tile_y_min then
-          p.vx = 0
-          p.px = ceil(nx/8) * 8
-        else
-          p.vy = 0
-          p.py = tile_y_min - 8
-        end
-      end
-    else -- down right
-      if bl then
-        p.vy = 0
-        p.py = flr(ny/8) * 8
-      end
-      if tr then
-        p.vx = 0
-        p.px = flr((p.px + p.vx)/8) * 8
-      end
-      if br then
-        local px = p.px + 7
-        local py = p.py + 7
+        local px = px_tl
+        local py = 7 + py_tl
+        local nx = nx_tl
+        local ny = 7 + ny_tl
         local dx = nx - px
         local dy = ny - py
         local hy = py + (dx * (dy/dx))
         local tile_y_min = flr(ny/8) * 8
         if py > tile_y_min then
           p.vx = 0
-          p.px = flr(px/8) * 8
+          mx = hit_left
           return
         end
-        local tile_x = flr(nx/8) * 8
-        if px > tile_x then
+        local tile_x_max = 7 + flr(nx/8) * 8
+        if nx == tile_x_max and ny == tile_y_min then
+          if br and not tl then
+            p.vy = 0
+            p.onground = true
+          elseif tl and not br then
+            p.vx = 0
+          elseif (br and tl) then
+            p.vx = 0
+            p.vy = 0
+            p.onground = true
+          elseif not (br or tl) then
+            p.vy = 0
+            p.onground = true
+          end
+          return
+        end
+        if px < tile_x_max then
           p.vy = 0
-          p.py = tile_y_min - 8
+          p.onground = true
+          my = hit_bottom
           return
         end
         if hy >= tile_y_min then
           p.vx = 0
-          p.px = (flr(nx/8) * 8) - 8
-        else
+          mx = hit_left
+          return
+        end
+      end
+    else -- down right
+      if bl then
+        p.vy = 0
+        my = hit_bottom
+        p.onground = true
+      end
+      if tr then
+        p.vx = 0
+        mx = hit_right
+      end
+      if br then
+        local px = px_tl
+        local py = 7 + py_tl
+        local nx = nx_tl
+        local ny = 7 + ny_tl
+        local dx = nx - px
+        local dy = ny - py
+        local hy = py + (dx * (dy/dx))
+        local tile_y_min = flr(ny/8) * 8
+        if py > tile_y_min then
+          p.vx = 0
+          mx = hit_right
+          return
+        end
+        local tile_x_min = flr(nx/8) * 8
+        if nx + 7 == tile_x_min + 7 and ny + 7 == tile_y_min then
+          if bl and not tr then
+            p.vy = 0
+            p.onground = true
+          elseif tr and not bl then
+            p.vx = 0
+          elseif (bl and tr) then
+            p.vx = 0
+            p.vy = 0
+            p.onground = true
+          elseif not (bl or tr) then
+            p.vy = 0
+            p.onground = true
+          end
+          return
+        end
+        if px > tile_x_min then
           p.vy = 0
-          p.py = tile_y_min - 8
+          p.onground = true
+          my = hit_bottom
+          return
+        end
+        if hy >= tile_y_min then
+          p.vx = 0
+          mx = hit_right
+          return
         end
       end
     end
