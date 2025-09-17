@@ -12,12 +12,3 @@ function flag(x,y,flag_num)
   return fget(tile_at_px(x,y),flag_num)
 end
 
-function remove_tile(x, y)
-  local tile_x = flr(x / 8)
-  local tile_y = flr(y / 8)
-  mset(tile_x, tile_y, 0)
-end
-
-function remove_tile_at_pixel(px, py)
-  remove_tile(px, py)
-end

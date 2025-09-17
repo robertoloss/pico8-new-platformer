@@ -1,16 +1,43 @@
 
 function controls()
   px,py=64-mx,64-my
-  vel = 1
-  p.ml = btn(0) and not flag(px,py,0) and not flag(px,py+7,0)
-  p.mr = btn(1) and not flag(px+8+p.vx,py,0) and not flag(px+9+p.vx,py+7,0)
+  vel = 1 -- 0.75
+  p.ml = btn(0) --and not flag(px,py,0) and not flag(px,py+7,0)
+  p.mr = btn(1) --and not flag(px+8+p.vx,py,0) and not flag(px+9+p.vx,py+7,0)
   p.mu = btn(2)
   p.md = btn(3)
-  p.jump = btn(4)
-  p.vx = p.ml and vel or (p.mr and -vel or 0)
+  p.jump = btn(5)
+
+  local vel_inc = 0.15
+  if p.ml then
+    if p.vx < vel then
+      p.vx += vel_inc*2
+    else
+      p.vx = vel
+    end
+  elseif p.mr then
+    if p.vx > -vel then
+      p.vx -= vel_inc*2
+    else
+      p.vx = -vel
+    end
+  else
+    if p.vx > 0 then
+      p.vx -= vel_inc
+      if p.vx < 0 then
+        p.vx = 0
+      end
+    elseif p.vx < 0 then
+      p.vx += vel_inc
+      if p.vx > 0 then
+        p.vx = 0
+      end
+    end
+  end
+  --p.vx = p.ml and vel or (p.mr and -vel or 0)
   --p.vy = p.mu and vel or (p.md and -vel or 0)
 
-  if btn(4) then
+  if btn(5) then
     if p.jpressed == false then
       p.j_newlypressed = true
     else
@@ -23,9 +50,9 @@ function controls()
 
   if p.j_newlypressed then
    -- and p.onground
-    p.vy=1.5
+    p.vy=1.0
     p.isjumping=true
-    p.jtm=10
+    p.jtm=12
     p.accy=0.05
   end
 
@@ -35,14 +62,14 @@ function controls()
       p.accy-=0.005
     else
       p.jtm,p.isjumping=0,false
-      p.accy=0.07
+      p.accy=0.12
     end
   end
 
   if p.jtm==0 then
     if not p.onground then
-      if p.vy > -3.0 then
-        p.accy+=0.008
+      if p.vy > -2.0 then
+        p.accy+=0.00075
         p.vy-=p.accy
       end
     end

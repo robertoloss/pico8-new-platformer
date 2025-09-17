@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PICO-8 Complete Mathematical Collision Trace</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.4;
+            margin: 20px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #444;
+            border-radius: 5px;
+        }
+        .function-header {
+            background-color: #2d2d2d;
+            color: #ffd700;
+            font-weight: bold;
+            padding: 10px;
+            margin: -15px -15px 15px -15px;
+            border-radius: 5px 5px 0 0;
+        }
+        .line-trace {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #2a2a2a;
+            border-left: 3px solid #0066cc;
+        }
+        .variable-change {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        .collision-check {
+            color: #ff9900;
+        }
+        .problem {
+            background-color: #441144;
+            border-left: 3px solid #ff0066;
+            color: #ffdddd;
+        }
+        .coordinates {
+            color: #66ccff;
+        }
+        .initial-state {
+            background-color: #2d4a2d;
+            border-left: 3px solid #00aa00;
+        }
+        .math-breakdown {
+            background-color: #2d2d4a;
+            border-left: 3px solid #6666ff;
+            color: #ccccff;
+        }
+        .flag-function {
+            background-color: #4a2d2d;
+            border-left: 3px solid #ff6666;
+            color: #ffcccc;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #666;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+        }
+        .math {
+            color: #cc99ff;
+            font-style: italic;
+        }
+        .step {
+            margin: 3px 0;
+            padding-left: 20px;
+        }
+        .substep {
+            margin: 2px 0;
+            padding-left: 40px;
+            font-size: 0.9em;
+            color: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>PICO-8 Complete Mathematical Collision Trace</h1>
+
+    <div class="section initial-state">
+        <div class="function-header">INITIAL CONDITIONS & MAP SETUP</div>
+        <div class="line-trace">
+            <strong>Game Setup:</strong><br>
+            • Player initially at map tile (8,8) = ground tile (solid, flag 0 = true)<br>
+            • Map tile at (9,8) = wall tile to the right (solid, flag 0 = true)<br>
+            • Map tile at (8,9) = ground tile below<br>
+            • Player presses RIGHT arrow button<br><br>
+
+            <strong>Initial Variables (from _init):</strong><br>
+            • <span class="coordinates">mx = 0, my = -1</span><br>
+            • <span class="coordinates">p.vx = 0, p.vy = 0</span><br><br>
+
+            <strong>Player Position Calculation:</strong><br>
+            • <span class="coordinates">px = 64 - mx = 64 - 0 = 64</span><br>
+            • <span class="coordinates">py = 64 - my = 64 - (-1) = 65</span><br>
+            • Player occupies screen pixels (64,65) to (71,72) - an 8x8 sprite
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="function-header">1. CONTROLS() FUNCTION EXECUTION</div>
+
+        <div class="line-trace">
+            <strong>Line 3:</strong> <code>px,py=64-mx,64-my</code><br>
+            <div class="step">px = 64 - 0 = 64</div>
+            <div class="step">py = 64 - (-1) = 65</div>
+            <span class="variable-change">px = 64, py = 65</span>
+        </div>
+
+        <div class="line-trace">
+            <strong>Line 6:</strong> <code>p.mr = btn(1)</code><br>
+            <span class="variable-change">p.mr = true</span> (right button pressed)
+        </div>
+
+        <div class="line-trace">
+            <strong>Lines 18-23:</strong> Right movement velocity calculation<br>
+            <code>if p.vx > -vel then p.vx -= vel_inc*2</code><br>
+            <div class="step">vel = 0.75, vel_inc = 0.15</div>
+            <div class="step">p.vx = 0 > -0.75? YES</div>
+            <div class="step">p.vx = p.vx - (vel_inc * 2) = 0 - (0.15 * 2) = 0 - 0.3 = -0.3</div>
+            <span class="variable-change">p.vx = -0.3</span> (negative means moving right)
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="function-header">2. RESOLVE_COLLISIONS() FUNCTION EXECUTION</div>
+
+        <div class="line-trace">
+            <strong>Lines 5-8:</strong> Calculate current and next player positions<br>
+            <div class="math-breakdown">
+                <div class="step"><strong>Current position:</strong></div>
+                <div class="substep">px_tl = 64 - mx = 64 - 0 = 64</div>
+                <div class="substep">py_tl = 64 - my = 64 - (-1) = 65</div>
+
+                <div class="step"><strong>Next position (after movement):</strong></div>
+                <div class="substep">nx_tl = 64 - (mx + p.vx) = 64 - (0 + (-0.3)) = 64 - (-0.3) = 64.3</div>
+                <div class="substep">ny_tl = 64 - (my + p.vy) = 64 - (-1 + 0) = 64 - (-1) = 65</div>
+            </div>
+            <span class="coordinates">Current player top-left: (64, 65)</span><br>
+            <span class="coordinates">Next player top-left: (64.3, 65)</span>
+        </div>
+
+        <div class="line-trace">
+            <strong>Lines 10-11:</strong> Set collision detection offsets<br>
+            <span class="variable-change">inc_x = 7, inc_y = 7</span>
+        </div>
+
+        <div class="line-trace">
+            <strong>Lines 17-20:</strong> Check collision flags at next position corners
+
+            <div class="flag-function">
+                <strong>🔍 TOP-LEFT CORNER: tl = fget(mget(flr(nx_tl/8), flr(ny_tl/8)), 0)</strong><br>
+                <div class="step">tl = fget(mget(flr(64.3/8), flr(65/8)), 0)</div>
+                <div class="substep">  flr(64.3/8) = flr(8.0375) = 8</div>
+                <div class="substep">  flr(65/8) = flr(8.125) = 8</div>
+                <div class="substep">  mget(8, 8) = ground tile</div>
+                <div class="substep">  fget(ground_tile, 0) = TRUE</div>
+                <div class="substep"><strong>tl = TRUE</strong> (collision with ground tile)</div>
+            </div>
+
+            <div class="flag-function">
+                <strong>🔍 TOP-RIGHT CORNER: tr = fget(mget(flr((nx_tl + inc_x)/8), flr(ny_tl/8)), 0)</strong><br>
+                <div class="step">tr = fget(mget(flr((64.3 + 7)/8), flr(65/8)), 0)</div>
+                <div class="step">tr = fget(mget(flr(71.3/8), flr(65/8)), 0)</div>
+                <div class="substep">  flr(71.3/8) = flr(8.9125) = 8</div>
+                <div class="substep">  flr(65/8) = flr(8.125) = 8</div>
+                <div class="substep">  mget(8, 8) = ground tile</div>
+                <div class="substep">  fget(ground_tile, 0) = TRUE</div>
+                <div class="substep"><strong>tr = TRUE</strong> (still in same ground tile)</div>
+            </div>
+
+            <div class="flag-function">
+                <strong>🔍 BOTTOM-LEFT CORNER: bl = fget(mget(flr(nx_tl/8), flr((ny_tl + inc_y)/8)), 0)</strong><br>
+                <div class="step">bl = fget(mget(flr(64.3/8), flr((65 + 7)/8)), 0)</div>
+                <div class="step">bl = fget(mget(flr(64.3/8), flr(72/8)), 0)</div>
+                <div class="substep">  flr(64.3/8) = flr(8.0375) = 8</div>
+                <div class="substep">  flr(72/8) = flr(9.0) = 9</div>
+                <div class="substep">  mget(8, 9) = ground tile below</div>
+                <div class="substep">  fget(ground_tile, 0) = TRUE</div>
+                <div class="substep"><strong>bl = TRUE</strong> (collision with ground below)</div>
+            </div>
+
+            <div class="flag-function">
+                <strong>🔍 BOTTOM-RIGHT CORNER: br = fget(mget(flr((nx_tl + inc_x)/8), flr((ny_tl + inc_y)/8)), 0)</strong><br>
+                <div class="step">br = fget(mget(flr((64.3 + 7)/8), flr((65 + 7)/8)), 0)</div>
+                <div class="step">br = fget(mget(flr(71.3/8), flr(72/8)), 0)</div>
+                <div class="substep">  flr(71.3/8) = flr(8.9125) = 8</div>
+                <div class="substep">  flr(72/8) = flr(9.0) = 9</div>
+                <div class="substep">  mget(8, 9) = ground tile below</div>
+                <div class="substep">  fget(ground_tile, 0) = TRUE</div>
+                <div class="substep"><strong>br = TRUE</strong> (collision with ground below)</div>
+            </div>
+
+            <span class="collision-check">tl = true, tr = true, bl = true, br = true</span>
+        </div>
+
+        <div class="line-trace problem">
+            <strong>🚨 THE CRITICAL ISSUE - MISSING THE WALL TILE:</strong><br>
+            <div class="step">The collision detection checks tiles (8,8) and (8,9)</div>
+            <div class="step">But the wall tile to the right is at (9,8)!</div>
+            <div class="step">To detect collision with tile (9,8), we need to check screen position 72+</div>
+            <div class="step">Current check: flr(71.3/8) = 8 ← MISSES the wall</div>
+            <div class="step">Needed check: flr(72+/8) = 9 ← WOULD DETECT the wall</div>
+            <div class="step"><strong>The player's right edge at 71.3 is just 0.7 pixels away from tile (9,8)</strong></div>
+        </div>
+
+        <div class="line-trace">
+            <strong>Lines 23-27:</strong> Calculate collision boundaries<br>
+            <div class="math-breakdown">
+                <div class="step">hit_left = flr((mx + p.vx) / 8) * 8</div>
+                <div class="substep">= flr((0 + (-0.3)) / 8) * 8</div>
+                <div class="substep">= flr(-0.3 / 8) * 8</div>
+                <div class="substep">= flr(-0.0375) * 8</div>
+                <div class="substep">= -1 * 8 = -8</div>
+
+                <div class="step">hit_right = ceil((mx + p.vx) / 8) * 8</div>
+                <div class="substep">= ceil((0 + (-0.3)) / 8) * 8</div>
+                <div class="substep">= ceil(-0.3 / 8) * 8</div>
+                <div class="substep">= ceil(-0.0375) * 8</div>
+                <div class="substep">= 0 * 8 = 0</div>
+            </div>
+            <span class="variable-change">hit_left = -8, hit_right = 0</span>
+        </div>
+
+        <div class="line-trace">
+            <strong>Lines 45-57:</strong> Pure horizontal movement logic (p.vy == 0)<br>
+            <code>if p.vx > 0</code> → false (p.vx = -0.3 < 0)<br>
+            <code>else: if tr or br</code> → true or true = TRUE<br>
+            <div class="step">tr = true, br = true, so collision detected!</div>
+            <div class="step">mx = hit_right = 0</div>
+            <div class="step">p.vx = 0</div>
+            <span class="variable-change">Collision resolved: mx = 0, p.vx = 0</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="function-header">3. BACK TO _UPDATE60() - FINAL POSITION UPDATE</div>
+
+        <div class="line-trace">
+            <strong>Line 16:</strong> <code>mx += p.vx</code><br>
+            <div class="step">mx = 0 + 0 = 0</div>
+            <span class="variable-change">mx = 0 (no movement due to collision)</span>
+        </div>
+
+        <div class="line-trace">
+            <strong>Line 17:</strong> <code>my += p.vy</code><br>
+            <div class="step">my = -1 + 0 = -1</div>
+            <span class="variable-change">my = -1 (unchanged)</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="function-header">4. _DRAW() FUNCTION - VISUAL RESULT</div>
+
+        <div class="line-trace">
+            <strong>Final World-to-Screen Mapping:</strong><br>
+            <div class="step">Player screen position: (64, 64) - FIXED</div>
+            <div class="step">Map offset: mx = 0, my = -1 (no movement occurred)</div>
+            <div class="step">Player occupies screen: (64, 64) to (71, 71)</div>
+        </div>
+
+        <table>
+            <tr><th>Element</th><th>Screen Position</th><th>Map Tile</th><th>Status</th></tr>
+            <tr><td>Player Sprite</td><td>(64,64) to (71,71)</td><td>(8,8)</td><td>On ground tile</td></tr>
+            <tr><td>Ground Tile</td><td>(64,64) to (71,71)</td><td>(8,8)</td><td>Player standing here</td></tr>
+            <tr><td>Wall Tile</td><td>(72,64) to (79,71)</td><td>(9,8)</td><td>Adjacent right</td></tr>
+            <tr><td>Ground Below</td><td>(64,72) to (71,79)</td><td>(8,9)</td><td>Below player</td></tr>
+        </table>
+
+        <div class="line-trace">
+            <strong>Result:</strong> Player stays in place - collision successfully prevented movement.
+        </div>
+    </div>
+
+    <div class="section problem">
+        <div class="function-header">🚨 WAIT - THIS TRACE SHOWS NO PENETRATION!</div>
+
+        <div class="line-trace">
+            <strong>The collision system worked correctly in this trace:</strong><br><br>
+
+            1. <strong>Collision was detected:</strong> tr and br both returned TRUE<br>
+            2. <strong>Movement was prevented:</strong> p.vx was set to 0, mx stayed at 0<br>
+            3. <strong>Player stayed in place:</strong> No penetration occurred<br><br>
+
+            <strong>But the user reports 1-pixel penetration happens!</strong><br>
+            This suggests one of these scenarios:<br><br>
+
+            • <strong>Scenario A:</strong> The actual map setup is different than assumed<br>
+            • <strong>Scenario B:</strong> There's a different movement case (diagonal) where collision fails<br>
+            • <strong>Scenario C:</strong> The collision boundary calculation (hit_right=0) is incorrect<br>
+            • <strong>Scenario D:</strong> This trace used the wrong inc_y value (should be 7 for horizontal movement)
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="function-header">💡 THE LIKELY ISSUE</div>
+
+        <div class="line-trace">
+            <strong>Based on the user's description, the problem likely occurs when:</strong><br><br>
+
+            1. <strong>The player is NOT on a solid ground tile</strong> (collision flags are false)<br>
+            2. <strong>Movement detection uses inc_x = 7</strong> which checks at (71.3, 65)<br>
+            3. <strong>This misses the wall tile at (9,8)</strong> which starts at screen x=72<br>
+            4. <strong>Result:</strong> No collision detected, player penetrates by 0.3 pixels<br><br>
+
+            <strong>The key insight:</strong> inc_x = 7 checks the player's right edge (71.3), but to detect collision with tile (9,8), we need to check at least at screen position 72.0. The current system has a sub-pixel gap where penetration can occur.
+        </div>
+    </div>
+
+</body>
+</html>
