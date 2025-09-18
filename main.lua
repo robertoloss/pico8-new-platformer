@@ -30,5 +30,5 @@ function _draw()
   cls()
   map(0,0,mx,my,16-ntx,16-nty)
   spr(p.spr,p.px,p.py)
-  debugging()
+  --debugging()
 end

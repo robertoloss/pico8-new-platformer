@@ -7,76 +7,21 @@ function resolve_collisions()
   local nx_tl = (64 - (mx+p.vx))
   local ny_tl = (64 - (my+p.vy))
 
-  inc_x = 7 --(p.vx ~= 0) and 8 or 7
-  inc_xr = (p.vx < 0) and 8 or 7
-
-  inc_y = 7 -- (p.vy ~= 0) and 8 or 0
-  inc_yb = (p.vy < 0) and 8 or 7
-
-  if p.vy > 0 or not (flag(nx_tl, ny_tl + inc_yb + 1, 0) or flag(nx_tl + inc_xr, ny_tl + inc_y + 1, 0)) then
+  if p.vy > 0 or not (flag(nx_tl, ny_tl + 8, 0) or flag(nx_tl + 7, ny_tl + 8, 0)) then
     p.onground = false
   end
 
-  local tl_x = flr(nx_tl/8)
-  local tl_y = flr(ny_tl/8)
-
-  local tr_x = flr((nx_tl + inc_xr)/8)
-  local tr_y = flr(ny_tl/8)
-
-  local bl_x = flr(nx_tl/8)
-  local bl_y = flr((ny_tl + inc_yb )/8)
-
-  local br_x = flr((nx_tl + inc_xr )/8)
-  local br_y = flr((ny_tl + inc_yb )/8)
-
-  tl_coord = "("..tostring(tl_x)..","..tostring(tl_y)..")"
-  tr_coord = "("..tostring(tr_x)..","..tostring(tr_y)..")"
-  bl_coord = "("..tostring(bl_x)..","..tostring(bl_y)..")"
-  br_coord = "("..tostring(br_x)..","..tostring(br_y)..")"
-
-  tl = fget(mget(tl_x, tl_y), 0)
-  tr = fget(mget(tr_x, tr_y), 0)
-  bl = fget(mget(bl_x, bl_y), 0)
-  br = fget(mget(br_x, br_y), 0)
-
+  tl = fget(mget(flr(nx_tl/8), flr(ny_tl/8)), 0)
+  tr = fget(mget(ceil(nx_tl/8), flr(ny_tl/8)), 0)
+  bl = fget(mget(flr(nx_tl/8), ceil(ny_tl/8)), 0)
+  br = fget(mget(ceil(nx_tl/8), ceil(ny_tl/8)), 0)
 
   local hit_left = flr((mx+p.vx)/8) * 8
   local hit_top = flr((my+p.vy)/8) * 8
   local hit_right = ceil((mx+p.vx)/8) * 8
   local hit_bottom = ceil((my+p.vy)/8) * 8
 
-  if p.vy == 0 then
-    if p.vx > 0 then
-      if tl or bl then
-        mx = hit_left
-        p.vx = 0
-      end
-    else
-      if tr or br then
-        mx = hit_right
-        p.vx = 0
-      end
-    end
-    return
-  end
-  if p.vx == 0 then
-    if p.vy > 0 then
-      if tl or tr then
-        my = hit_top
-        p.vy = 0
-      end
-    else
-      if br or bl then
-        my = hit_bottom
-        p.vy = 0
-        p.onground = true
-      end
-    end
-    return
-  end
-
-
-  if p.vy > 0 then
+  if p.vy >= 0 then
     if p.vx > 0 then -- up left
       if tr then
         p.vy = 0
@@ -137,7 +82,7 @@ function resolve_collisions()
       if tr then
         local px = 7 + px_tl
         local py = py_tl
-        local nx = inc_xr + nx_tl
+        local nx = 8 + nx_tl
         local ny = ny_tl
         local dx = px - nx
         local dy = ny - py
@@ -163,7 +108,6 @@ function resolve_collisions()
           return
         end
         if px > tile_x_min then
-          debug = "pollo"
           p.vy = 0
           my = hit_top
           return
@@ -176,7 +120,7 @@ function resolve_collisions()
       end
     end
   else -- DOWN
-    if p.vx > 0 then -- DOWN LEFT
+    if p.vx >= 0 then -- DOWN LEFT
       if br then
         p.vy = 0
         my = hit_bottom
@@ -190,7 +134,7 @@ function resolve_collisions()
         local px = px_tl
         local py = 7 + py_tl
         local nx = nx_tl
-        local ny = inc_yb + ny_tl
+        local ny = 8 + ny_tl
         local dx = nx - px
         local dy = ny - py
         local hy = py + (dx * (dy/dx))
@@ -241,9 +185,9 @@ function resolve_collisions()
       end
       if br then
         local px = px_tl
-        local py = inc_xr + py_tl
+        local py = 7 + py_tl
         local nx = nx_tl
-        local ny = inc_yb + ny_tl
+        local ny = 8 + ny_tl
         local dx = nx - px
         local dy = ny - py
         local hy = py + (dx * (dy/dx))
