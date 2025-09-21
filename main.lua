@@ -32,5 +32,5 @@ function _draw()
   cls()
   map(0,0,mx,my,16-ntx,16-nty)
   spr(p.spr,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
-  debugging()
+  --debugging()
 end

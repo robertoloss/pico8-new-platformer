@@ -8,9 +8,9 @@ function controls()
   p.md = btn(3)
   p.jump = btn(5)
 
-  local vel_inc = 0.15 --0.15
-  local j_vel_d = 4
-  local vel_dec = 0.3
+  local vel_inc = 0.1 --0.15
+  local vel_dec_j = 0.07
+  local vel_dec = 0.2
   if p.ml then
     if p.vx < vel then
       p.vx += vel_inc*2
@@ -26,7 +26,7 @@ function controls()
   else
     if p.vx > 0 then
       if not p.onground then
-        p.vx -= vel_inc/j_vel_d
+        p.vx -= vel_dec_j
       else
         p.vx -= vel_dec
       end
@@ -35,7 +35,7 @@ function controls()
       end
     elseif p.vx < 0 then
       if not p.onground then
-        p.vx += vel_inc/j_vel_d
+        p.vx += vel_dec_j
       else
         p.vx += vel_dec
       end

@@ -32,12 +32,9 @@ function resolve_collisions()
     if p.vx > 0 then -- up left
       if res_sec_tiles(tr,hit_top,bl,hit_left,false) then return end
       if tl then
-        local px = px_tl
-        local py = py_tl+hb.t
-        local nx = nx_tl
-        local ny = ny_tl+hb.t
-        local dx = nx - px
-        local dy = ny - py
+        local px,py = px_tl,py_tl+hb.t
+        local nx,ny = nx_tl,ny_tl+hb.t
+        local dx,dy = nx-px,ny-py
         local hy = py + (dx * (dy/dx))
         local tile_y_max = (ceil(ny/8) * 8) - 1
         if py < tile_y_max then
@@ -60,12 +57,9 @@ function resolve_collisions()
     else -- UP RIGHT
       if res_sec_tiles(tl,hit_top,br,hit_right,false) then return end
       if tr then
-        local px = 7 + px_tl
-        local py = py_tl + hb.t
-        local nx = 8 + nx_tl
-        local ny = ny_tl + hb.t
-        local dx = px - nx
-        local dy = ny - py
+        local px,py = 7 + px_tl,py_tl + hb.t
+        local nx,ny = 8 + nx_tl,ny_tl + hb.t
+        local dx,dy = px-nx,ny-py
         local hy = py + (dx * (dy/dx))
         local tile_y_max = (ceil(ny/8) * 8) - 1
         if py < tile_y_max then
@@ -91,29 +85,22 @@ function resolve_collisions()
       if res_sec_tiles(br,hit_bottom,tl,hit_left,true) then return end
       if br or tl then return end
       if bl then
-        local px = px_tl
-        local py = 7 + py_tl
-        local nx = nx_tl
-        local ny = 8 + ny_tl
-        local dx = nx - px
-        local dy = ny - py
+        local px,py = px_tl,7 + py_tl
+        local nx,ny = nx_tl,8 + ny_tl
+        local dx,dy = nx - px,ny-py
         local hy = py + (dx * (dy/dx))
         local tile_y_min = flr(ny/8) * 8
         if py > tile_y_min then
-          p.vx = 0
-          mx = hit_left
+          p.vx,mx = 0,hit_left
           return
         end
         local tile_x_max = 7 + flr(nx/8) * 8
         if px < tile_x_max then
-          p.vy = 0
-          p.onground = true
-          my = hit_bottom
+          p.vy, p.onground, my = 0, true, hit_bottom
           return
         end
-        if hy >= tile_y_min then
-          p.vx = 0
-          mx = hit_left
+        if hy > tile_y_min then
+          p.vx,nx = 0,hit_left
           return
         end
       end
@@ -121,17 +108,13 @@ function resolve_collisions()
       if res_sec_tiles(bl,hit_bottom,tr,hit_right,true) then return end
       if bl or tr then return end
       if br then
-        local px = px_tl
-        local py = 7 + py_tl
-        local nx = nx_tl
-        local ny = 8 + ny_tl
-        local dx = nx - px
-        local dy = ny - py
+        local px,py = px_tl,7+py_tl
+        local nx,ny = nx_tl,8+ny_tl
+        local dx,dy = nx-px,ny-py
         local hy = py + (dx * (dy/dx))
         local tile_y_min = flr(ny/8) * 8
         if py > tile_y_min then
-          p.vx = 0
-          mx = hit_right
+          p.vx, mx = 0, hit_right
           return
         end
         local tile_x_min = flr(nx/8) * 8
@@ -141,7 +124,7 @@ function resolve_collisions()
           my = hit_bottom
           return
         end
-        if hy >= tile_y_min then
+        if hy > tile_y_min then
           p.vx = 0
           mx = hit_right
           return
