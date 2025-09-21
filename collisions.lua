@@ -14,14 +14,14 @@ function resolve_collisions()
 
   local hb = {
     l=p.lr_dir=='r' and 3 or 0,
-    r=p.lr_dir=='l' and 3 or 0,
+    r=p.lr_dir=='l' and -3 or 0,
     t=3
   }
 
   tl = fget(mget(flr((nx_tl+hb.l)/8), flr((ny_tl+hb.t)/8)), 0)
-  tr = fget(mget(ceil((nx_tl-hb.r)/8), flr((ny_tl+hb.t)/8)), 0)
+  tr = fget(mget(ceil((nx_tl+hb.r)/8), flr((ny_tl+hb.t)/8)), 0)
   bl = fget(mget(flr((nx_tl+hb.l)/8), ceil((ny_tl)/8)), 0)
-  br = fget(mget(ceil((nx_tl-hb.r)/8), ceil((ny_tl)/8)), 0)
+  br = fget(mget(ceil((nx_tl+hb.r)/8), ceil((ny_tl)/8)), 0)
 
   local hit_left = flr((mx+p.vx)/8) * 8
   local hit_top = hb.t + flr((my+p.vy)/8) * 8
@@ -132,13 +132,12 @@ function resolve_collisions()
         p.vy = 0
         my = hit_bottom
         p.onground = true
-        return
       end
       if tl then
         p.vx = 0
         mx = hit_left
-        return
       end
+      if br or tl then return end
       if bl then
         local px = px_tl
         local py = 7 + py_tl
@@ -187,13 +186,12 @@ function resolve_collisions()
         p.vy = 0
         my = hit_bottom
         p.onground = true
-        return
       end
       if tr then
         p.vx = 0
         mx = hit_right
-        return
       end
+      if bl or tr then return end
       if br then
         local px = px_tl
         local py = 7 + py_tl

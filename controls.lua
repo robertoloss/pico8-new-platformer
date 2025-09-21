@@ -10,7 +10,7 @@ function controls()
 
   local vel_inc = 0.05 --0.15
   local j_vel_d = 4
-  local j_vel = 0.5
+  local vel_dec = 0.3
   if p.ml then
     if p.vx < vel then
       p.vx += vel_inc*2
@@ -28,7 +28,7 @@ function controls()
       if not p.onground then
         p.vx -= vel_inc/j_vel_d
       else
-        p.vx -= vel_inc/j_vel
+        p.vx -= vel_dec
       end
       if p.vx < 0 then
         p.vx = 0
@@ -37,7 +37,7 @@ function controls()
       if not p.onground then
         p.vx += vel_inc/j_vel_d
       else
-        p.vx += vel_inc/j_vel
+        p.vx += vel_dec
       end
       if p.vx > 0 then
         p.vx = 0
@@ -84,6 +84,6 @@ function controls()
     p.jtm-=1
   end
 
-  if p.vx>0 then p.lr_dir='l' end
-  if p.vx<0 then p.lr_dir='r' end
+  if p.ml then p.lr_dir='l' end
+  if p.mr then p.lr_dir='r' end
 end

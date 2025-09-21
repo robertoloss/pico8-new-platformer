@@ -1,7 +1,8 @@
 
 function debugging()
   print("mx: "..tostring(mx).." my:"..tostring(my))
-  print("vx: "..tostring(p.vx).." vy: "..tostring(p.vy))
+  print("vx: "..tostring(p.vx))
+  print("vy: "..tostring(p.vy))
   print("onground: "..tostring(p.onground))
   print("jpressed: "..tostring(p.jpressed))
   print("tl: "..tostring(tl).." tr: "..tostring(tr))
