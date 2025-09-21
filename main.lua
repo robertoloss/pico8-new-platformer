@@ -17,6 +17,8 @@ function _update60()
   --p.vx = mid(-1, p.vx, 1)
   mx+=p.vx
   my+=p.vy
+
+  anti_cs()
 end
 
 function _draw()
@@ -29,6 +31,6 @@ function _draw()
   nty = my<=0 and my or 0
   cls()
   map(0,0,mx,my,16-ntx,16-nty)
-  spr(p.spr,p.px,p.py)
-  --debugging()
+  spr(p.spr,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
+  debugging()
 end

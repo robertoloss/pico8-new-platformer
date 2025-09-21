@@ -8,7 +8,7 @@ function controls()
   p.md = btn(3)
   p.jump = btn(5)
 
-  local vel_inc = 0.15
+  local vel_inc = 0.05 --0.15
   local j_vel_d = 4
   local j_vel = 1
   if p.ml then
@@ -83,4 +83,7 @@ function controls()
   else
     p.jtm-=1
   end
+
+  if p.vx>0 then p.lr_dir='l' end
+  if p.vx<0 then p.lr_dir='r' end
 end

@@ -1,5 +1,6 @@
 
 function resolve_collisions()
+
   if p.vx == 0 and p.vy == 0 then return end
 
   local px_tl = 64 - mx
@@ -7,17 +8,23 @@ function resolve_collisions()
   local nx_tl = (64 - (mx+p.vx))
   local ny_tl = (64 - (my+p.vy))
 
-  if p.vy > 0 or not (flag(nx_tl, ny_tl + 8, 0) or flag(nx_tl + 7, ny_tl + 8, 0)) then
+  if p.vy > 0 or not (flag(nx_tl+3, ny_tl + 8, 0) or flag(nx_tl + 4, ny_tl + 8, 0)) then
     p.onground = false
   end
 
-  tl = fget(mget(flr(nx_tl/8), flr(ny_tl/8)), 0)
-  tr = fget(mget(ceil(nx_tl/8), flr(ny_tl/8)), 0)
-  bl = fget(mget(flr(nx_tl/8), ceil(ny_tl/8)), 0)
-  br = fget(mget(ceil(nx_tl/8), ceil(ny_tl/8)), 0)
+  local hb = {
+    l=p.lr_dir=='r' and 3 or 0,
+    r=p.lr_dir=='l' and 3 or 0,
+    t=3
+  }
+
+  tl = fget(mget(flr((nx_tl+hb.l)/8), flr((ny_tl+hb.t)/8)), 0)
+  tr = fget(mget(ceil((nx_tl-hb.r)/8), flr((ny_tl+hb.t)/8)), 0)
+  bl = fget(mget(flr((nx_tl+hb.l)/8), ceil((ny_tl)/8)), 0)
+  br = fget(mget(ceil((nx_tl-hb.r)/8), ceil((ny_tl)/8)), 0)
 
   local hit_left = flr((mx+p.vx)/8) * 8
-  local hit_top = flr((my+p.vy)/8) * 8
+  local hit_top = hb.t + flr((my+p.vy)/8) * 8
   local hit_right = ceil((mx+p.vx)/8) * 8
   local hit_bottom = ceil((my+p.vy)/8) * 8
 
@@ -33,9 +40,9 @@ function resolve_collisions()
       end
       if tl then
         local px = px_tl
-        local py = py_tl
+        local py = py_tl+hb.t
         local nx = nx_tl
-        local ny = ny_tl
+        local ny = ny_tl+hb.t
         local dx = nx - px
         local dy = ny - py
         local hy = py + (dx * (dy/dx))
@@ -81,9 +88,9 @@ function resolve_collisions()
       end
       if tr then
         local px = 7 + px_tl
-        local py = py_tl
+        local py = py_tl + hb.t
         local nx = 8 + nx_tl
-        local ny = ny_tl
+        local ny = ny_tl + hb.t
         local dx = px - nx
         local dy = ny - py
         local hy = py + (dx * (dy/dx))
@@ -227,5 +234,17 @@ function resolve_collisions()
         end
       end
     end
+  end
+end
+
+
+function res_d_sec(p,h_sec,v_sec,hit_h_sec,hit_v_sec)
+  if h_sec then
+    p.vy=0
+    my=hit_h_sec
+  end
+  if v_sec then
+    p.vx=0
+    mx=hit_v_sec
   end
 end
