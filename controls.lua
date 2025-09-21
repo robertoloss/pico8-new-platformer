@@ -10,7 +10,7 @@ function controls()
 
   local vel_inc = 0.05 --0.15
   local j_vel_d = 4
-  local j_vel = 1
+  local j_vel = 0.5
   if p.ml then
     if p.vx < vel then
       p.vx += vel_inc*2

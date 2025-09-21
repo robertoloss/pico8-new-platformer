@@ -132,10 +132,12 @@ function resolve_collisions()
         p.vy = 0
         my = hit_bottom
         p.onground = true
+        return
       end
       if tl then
         p.vx = 0
         mx = hit_left
+        return
       end
       if bl then
         local px = px_tl
@@ -185,10 +187,12 @@ function resolve_collisions()
         p.vy = 0
         my = hit_bottom
         p.onground = true
+        return
       end
       if tr then
         p.vx = 0
         mx = hit_right
+        return
       end
       if br then
         local px = px_tl
