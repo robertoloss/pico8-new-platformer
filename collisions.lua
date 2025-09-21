@@ -46,19 +46,6 @@ function resolve_collisions()
           return
         end
         local tile_x_max = 7 + flr(nx/8) * 8
-        if nx == tile_x_max and ny == tile_y_max then
-          if tr and not bl then
-            p.vy = 0
-          elseif bl and not tr then
-            p.vx = 0
-          elseif (tr and bl) then
-            p.vx = 0
-            p.vy = 0
-          elseif not (tr or bl) then
-            p.vy = 0
-          end
-          return
-        end
         if px < tile_x_max then
           p.vy = 0
           my = hit_top
@@ -87,19 +74,6 @@ function resolve_collisions()
           return
         end
         local tile_x_min = flr(nx/8) * 8
-        if nx == tile_x_min and ny == tile_y_max then
-          if tl and not br then
-            p.vy = 0
-          elseif br and not tl then
-            p.vx = 0
-          elseif (tl and br) then
-            p.vx = 0
-            p.vy = 0
-          elseif not (tl or br) then
-            p.vy = 0
-          end
-          return
-        end
         if px > tile_x_min then
           p.vy = 0
           my = hit_top
@@ -131,22 +105,6 @@ function resolve_collisions()
           return
         end
         local tile_x_max = 7 + flr(nx/8) * 8
-        if nx == tile_x_max and ny == tile_y_min then
-          if br and not tl then
-            p.vy = 0
-            p.onground = true
-          elseif tl and not br then
-            p.vx = 0
-          elseif (br and tl) then
-            p.vx = 0
-            p.vy = 0
-            p.onground = true
-          elseif not (br or tl) then
-            p.vy = 0
-            p.onground = true
-          end
-          return
-        end
         if px < tile_x_max then
           p.vy = 0
           p.onground = true
@@ -177,22 +135,6 @@ function resolve_collisions()
           return
         end
         local tile_x_min = flr(nx/8) * 8
-        if nx + 7 == tile_x_min + 7 and ny + 7 == tile_y_min then
-          if bl and not tr then
-            p.vy = 0
-            p.onground = true
-          elseif tr and not bl then
-            p.vx = 0
-          elseif (bl and tr) then
-            p.vx = 0
-            p.vy = 0
-            p.onground = true
-          elseif not (bl or tr) then
-            p.vy = 0
-            p.onground = true
-          end
-          return
-        end
         if px > tile_x_min then
           p.vy = 0
           p.onground = true
