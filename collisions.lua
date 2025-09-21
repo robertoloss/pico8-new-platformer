@@ -30,14 +30,7 @@ function resolve_collisions()
 
   if p.vy >= 0 then
     if p.vx > 0 then -- up left
-      if tr then
-        p.vy = 0
-        my = hit_top
-      end
-      if bl then
-        p.vx = 0
-        mx = hit_left
-      end
+      if res_sec_tiles(tr,hit_top,bl,hit_left,false) then return end
       if tl then
         local px = px_tl
         local py = py_tl+hb.t
@@ -78,14 +71,7 @@ function resolve_collisions()
         end
       end
     else -- UP RIGHT
-      if tl then
-        p.vy = 0
-        my = hit_top
-      end
-      if br then
-        p.vx = 0
-        mx = hit_right
-      end
+      if res_sec_tiles(tl,hit_top,br,hit_right,false) then return end
       if tr then
         local px = 7 + px_tl
         local py = py_tl + hb.t
@@ -128,15 +114,7 @@ function resolve_collisions()
     end
   else -- DOWN
     if p.vx >= 0 then -- DOWN LEFT
-      if br then
-        p.vy = 0
-        my = hit_bottom
-        p.onground = true
-      end
-      if tl then
-        p.vx = 0
-        mx = hit_left
-      end
+      if res_sec_tiles(br,hit_bottom,tl,hit_left,true) then return end
       if br or tl then return end
       if bl then
         local px = px_tl
@@ -181,16 +159,8 @@ function resolve_collisions()
           return
         end
       end
-    else -- down right
-      if bl then
-        p.vy = 0
-        my = hit_bottom
-        p.onground = true
-      end
-      if tr then
-        p.vx = 0
-        mx = hit_right
-      end
+    else -- DOWN RIGHT
+      if res_sec_tiles(bl,hit_bottom,tr,hit_right,true) then return end
       if bl or tr then return end
       if br then
         local px = px_tl
@@ -240,13 +210,18 @@ function resolve_collisions()
 end
 
 
-function res_d_sec(p,h_sec,v_sec,hit_h_sec,hit_v_sec)
+function res_sec_tiles(h_sec,hit_h_sec,v_sec,hit_v_sec,on_ground_true)
   if h_sec then
     p.vy=0
     my=hit_h_sec
+    if on_ground_true then p.onground=true end
   end
   if v_sec then
     p.vx=0
     mx=hit_v_sec
   end
+  if h_sec or v_sec then
+    return true
+  end
+  return false
 end
