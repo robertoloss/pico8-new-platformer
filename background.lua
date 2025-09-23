@@ -24,7 +24,7 @@ function draw_background()
   while y<16+lim do
     local x=-lim
     while x<16+lim do
-      map(124,60,(8*x)+cx,(8*y)+cy)
+      map(124,60,(8*x)+cx/2,(8*y)+cy/2)
       x+=4
     end
     y+=4
