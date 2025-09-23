@@ -1,12 +1,14 @@
 
 function debugging()
   print("mx: "..tostring(mx).." my:"..tostring(my))
+  print("cx: "..tostring(cx).." cy:"..tostring(cy))
   print("vx: "..tostring(p.vx))
   print("vy: "..tostring(p.vy))
   print("onground: "..tostring(p.onground))
   print("jpressed: "..tostring(p.jpressed))
   print("tl: "..tostring(tl).." tr: "..tostring(tr))
   print("bl: "..tostring(bl).." br: "..tostring(br))
+
   -- print("p.jump: "..tostring(p.jump and true or ""))
   -- print("p.isjumping: "..tostring(p.isjumping))
   -- print("p.keepjumping: "..tostring(p.keepjumping))

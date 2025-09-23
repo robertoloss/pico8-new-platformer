@@ -1,5 +1,4 @@
 
-
 function px2tile(px)
   return flr(px/8)
 end
@@ -14,8 +13,6 @@ end
 
 
 function anti_cs()
-  if p.vy == 0 or p.vx == 0 then return end
-
   nmx=flr(mx)+0.5
   nmy=flr(my)+0.5
 

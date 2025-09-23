@@ -32,12 +32,9 @@ function resolve_collisions()
     if p.vx > 0 then -- up left
       if res_sec_tiles(tr,hit_top,bl,hit_left,false) then return end
       if tl then
-        local px = px_tl
-        local py = py_tl+hb.t
-        local nx = nx_tl
-        local ny = ny_tl+hb.t
-        local dx = nx - px
-        local dy = ny - py
+        local px, py = px_tl, py_tl+hb.t
+        local nx, ny = nx_tl, ny_tl+hb.t
+        local dx, dy = nx - px, ny - py
         local hy = py + (dx * (dy/dx))
         local tile_y_max = (ceil(ny/8) * 8) - 1
         if py < tile_y_max then
@@ -46,19 +43,7 @@ function resolve_collisions()
           return
         end
         local tile_x_max = 7 + flr(nx/8) * 8
-        if nx == tile_x_max and ny == tile_y_max then
-          if tr and not bl then
-            p.vy = 0
-          elseif bl and not tr then
-            p.vx = 0
-          elseif (tr and bl) then
-            p.vx = 0
-            p.vy = 0
-          elseif not (tr or bl) then
-            p.vy = 0
-          end
-          return
-        end
+        check_corner(nx,ny,tile_x_max,tile_y_max,tr,bl,false)
         if px < tile_x_max then
           p.vy = 0
           my = hit_top
@@ -73,12 +58,9 @@ function resolve_collisions()
     else -- UP RIGHT
       if res_sec_tiles(tl,hit_top,br,hit_right,false) then return end
       if tr then
-        local px = 7 + px_tl
-        local py = py_tl + hb.t
-        local nx = 8 + nx_tl
-        local ny = ny_tl + hb.t
-        local dx = px - nx
-        local dy = ny - py
+        local px, py = 7 + px_tl, py_tl + hb.t
+        local nx, ny = 8 + nx_tl, ny_tl + hb.t
+        local dx, dy = px - nx, ny - py
         local hy = py + (dx * (dy/dx))
         local tile_y_max = (ceil(ny/8) * 8) - 1
         if py < tile_y_max then
@@ -87,19 +69,7 @@ function resolve_collisions()
           return
         end
         local tile_x_min = flr(nx/8) * 8
-        if nx == tile_x_min and ny == tile_y_max then
-          if tl and not br then
-            p.vy = 0
-          elseif br and not tl then
-            p.vx = 0
-          elseif (tl and br) then
-            p.vx = 0
-            p.vy = 0
-          elseif not (tl or br) then
-            p.vy = 0
-          end
-          return
-        end
+        check_corner(nx,ny,tile_x_min,tile_y_max,tl,br,false)
         if px > tile_x_min then
           p.vy = 0
           my = hit_top
@@ -117,12 +87,9 @@ function resolve_collisions()
       if res_sec_tiles(br,hit_bottom,tl,hit_left,true) then return end
       if br or tl then return end
       if bl then
-        local px = px_tl
-        local py = 7 + py_tl
-        local nx = nx_tl
-        local ny = 8 + ny_tl
-        local dx = nx - px
-        local dy = ny - py
+        local px, py = px_tl, 7 + py_tl
+        local nx, ny = nx_tl, 8 + ny_tl
+        local dx, dy = nx - px, ny - py
         local hy = py + (dx * (dy/dx))
         local tile_y_min = flr(ny/8) * 8
         if py > tile_y_min then
@@ -131,22 +98,7 @@ function resolve_collisions()
           return
         end
         local tile_x_max = 7 + flr(nx/8) * 8
-        if nx == tile_x_max and ny == tile_y_min then
-          if br and not tl then
-            p.vy = 0
-            p.onground = true
-          elseif tl and not br then
-            p.vx = 0
-          elseif (br and tl) then
-            p.vx = 0
-            p.vy = 0
-            p.onground = true
-          elseif not (br or tl) then
-            p.vy = 0
-            p.onground = true
-          end
-          return
-        end
+        check_corner(nx,ny,tile_x_max,tile_y_min,tl,br,true)
         if px < tile_x_max then
           p.vy = 0
           p.onground = true
@@ -163,12 +115,9 @@ function resolve_collisions()
       if res_sec_tiles(bl,hit_bottom,tr,hit_right,true) then return end
       if bl or tr then return end
       if br then
-        local px = px_tl
-        local py = 7 + py_tl
-        local nx = nx_tl
-        local ny = 8 + ny_tl
-        local dx = nx - px
-        local dy = ny - py
+        local px, py = px_tl, 7 + py_tl
+        local nx, ny = nx_tl, 8 + ny_tl
+        local dx, dy = nx - px, ny - py
         local hy = py + (dx * (dy/dx))
         local tile_y_min = flr(ny/8) * 8
         if py > tile_y_min then
@@ -177,22 +126,7 @@ function resolve_collisions()
           return
         end
         local tile_x_min = flr(nx/8) * 8
-        if nx + 7 == tile_x_min + 7 and ny + 7 == tile_y_min then
-          if bl and not tr then
-            p.vy = 0
-            p.onground = true
-          elseif tr and not bl then
-            p.vx = 0
-          elseif (bl and tr) then
-            p.vx = 0
-            p.vy = 0
-            p.onground = true
-          elseif not (bl or tr) then
-            p.vy = 0
-            p.onground = true
-          end
-          return
-        end
+        check_corner(nx,ny,tile_x_min,tile_y_min,bl,tr,true)
         if px > tile_x_min then
           p.vy = 0
           p.onground = true
@@ -209,7 +143,6 @@ function resolve_collisions()
   end
 end
 
-
 function res_sec_tiles(h_sec,hit_h_sec,v_sec,hit_v_sec,on_ground_true)
   if h_sec then
     p.vy=0
@@ -224,4 +157,21 @@ function res_sec_tiles(h_sec,hit_h_sec,v_sec,hit_v_sec,on_ground_true)
     return true
   end
   return false
+end
+
+function check_corner(nx,ny,tile_lim_x,tile_lim_y,sec_t_h,sec_t_v,on_ground_true)
+  if nx == tile_lim_x and ny == tile_lim_y then
+    if sec_t_h and not sec_t_v then
+      p.vy = 0
+      if on_ground_true then p.onground=true end
+    elseif sec_t_v and not sec_t_h then
+      p.vx = 0
+    elseif (sec_t_h and sec_t_v) then
+      p.vx = 0
+      p.vy = 0
+    elseif not (sec_t_h or sec_t_v) then
+      p.vy = 0
+    end
+    return
+  end
 end
