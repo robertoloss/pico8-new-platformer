@@ -8,8 +8,8 @@ function controls()
   p.md = btn(3)
   p.jump = btn(5)
 
-  local vel_inc = 0.05 --0.15
-  local vel_dec = 0.3
+  local vel_inc = 0.1 --0.15
+  local vel_dec = 0.5
   local vel_dec_j = 0.06
   if p.ml then
     if p.vx < vel then

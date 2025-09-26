@@ -1,9 +1,11 @@
 cx = 0
 cy = 0
+
 function draw_background()
   cx += p.vx
   cy += p.vy
   lim=32
+
   if cx>lim then
     cx=-lim+(cx-lim)
   end
@@ -21,6 +23,7 @@ function draw_background()
   cy = flr(cy)+0.5
 
   local y=-lim
+
   while y<16+lim do
     local x=-lim
     while x<16+lim do
@@ -29,5 +32,4 @@ function draw_background()
     end
     y+=4
   end
-
 end
