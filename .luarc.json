@@ -1,0 +1,15 @@
+{
+  "diagnostics": {
+    "disable": [
+      "lowercase-global",
+      "duplicate-set-field",
+      "undefined-global",
+      "unknown-symbol"
+    ],
+    "globals": [
+      "+=", "-=", "*=", "/=", "%="
+    ]
+  }
+}
+
+

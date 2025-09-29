@@ -8,6 +8,15 @@ function controls()
   p.md = btn(3)
   p.jump = btn(5)
 
+  if btn(4) and p.can_fire then
+    --local b = Bullet.new(p.px,p.py,true)
+    sfx(1)
+    local x_offs=p.lr_dir=='l' and -6 or 6
+    local b = Bullet:new(p.px+x_offs,p.py+1,p.lr_dir=='r')
+    p.can_fire = false
+    add(bullets,b)
+  end
+
   local vel_inc = 0.1 --0.15
   local vel_dec = 0.5
   local vel_dec_j = 0.06
@@ -57,6 +66,7 @@ function controls()
   end
 
   if p.j_newlypressed then
+    sfx(0)
     p.vy=1.0
     p.isjumping=true
     p.jtm=12

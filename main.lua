@@ -2,6 +2,7 @@
 function _init()
 	mx=0
 	my=-1
+  bullets={}
 end
 
 tick=0
@@ -19,6 +20,10 @@ function _update60()
   my+=p.vy
 
   anti_cs()
+  for i,b in ipairs(bullets) do
+    b:move(i)
+  end
+  reload_gun()
 end
 
 function _draw()
@@ -33,5 +38,9 @@ function _draw()
   draw_background()
   map(0,0,mx,my,16-ntx,16-nty)
   spr(p.spr,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
+  spr(17,p.px+(p.lr_dir=='l' and -3 or 3),p.py+2,1,1,p.lr_dir=='l' and true or false)
+  for _,b in ipairs(bullets) do
+    b:draw()
+  end
   debugging()
 end
