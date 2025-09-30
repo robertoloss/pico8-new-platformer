@@ -14,7 +14,8 @@ P = {
  lr_dir="r",
  can_fire = true,
  reload_count = 0,
- reload_lim = 16
+ reload_lim = 8,
+ just_fired = 0
 }
 
 P.__index = P

@@ -6,10 +6,11 @@ function controls()
   p.mr = btn(1)
   p.mu = btn(2)
   p.md = btn(3)
-  p.jump = btn(5)
+  p.jump = btn(4)
 
-  if btn(4) and p.can_fire then
+  if btn(5) and p.can_fire then
     --local b = Bullet.new(p.px,p.py,true)
+    p.just_fired=1
     sfx(1)
     local x_offs=p.lr_dir=='l' and -6 or 6
     local b = Bullet:new(p.px+x_offs,p.py+1,p.lr_dir=='r')
@@ -17,18 +18,18 @@ function controls()
     add(bullets,b)
   end
 
-  local vel_inc = 0.1 --0.15
+  local vel_inc = 0.15 --0.15
   local vel_dec = 0.5
   local vel_dec_j = 0.06
   if p.ml then
     if p.vx < vel then
-      p.vx += vel_inc*2
+      p.vx += vel_inc
     else
       p.vx = vel
     end
   elseif p.mr then
     if p.vx > -vel then
-      p.vx -= vel_inc*2
+      p.vx -= vel_inc
     else
       p.vx = -vel
     end
@@ -54,7 +55,7 @@ function controls()
     end
   end
 
-  if btn(5) then
+  if btn(4) then
     if p.jpressed == false then
       p.j_newlypressed = true
     else

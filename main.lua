@@ -9,6 +9,13 @@ tick=0
 tick_lim=0
 
 function _update60()
+  if p.just_fired > 0 then
+    if p.just_fired > 2 then
+      p.just_fired = 0
+    else
+      p.just_fired+=1
+    end
+  end
   if tick < tick_lim then
     return
   end
@@ -38,7 +45,12 @@ function _draw()
   draw_background()
   map(0,0,mx,my,16-ntx,16-nty)
   spr(p.spr,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
-  spr(17,p.px+(p.lr_dir=='l' and -3 or 3),p.py+2,1,1,p.lr_dir=='l' and true or false)
+  local ng = p.just_fired==0 and 0 or 1
+  spr(
+    17,
+    p.px+(p.lr_dir=='l' and -(3-ng) or 3-ng),
+    p.py+2,
+    1,1,p.lr_dir=='l' and true or false)
   for _,b in ipairs(bullets) do
     b:draw()
   end
