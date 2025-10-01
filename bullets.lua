@@ -34,6 +34,20 @@ function Bullet:move(idx)
   self.py = new_y
 end
 
+function Bullet:collision(idx)
+  local px = self.px - mx
+  local py = self.py - my
+
+  local clt = fget(mget(flr((px+3)/8),flr((py+4)/8)),0)
+  local clb = fget(mget(flr((px+3)/8),flr((py+6)/8)),0)
+  local crt = fget(mget(flr((px+5)/8),flr((py+4)/8)),0)
+  local crb = fget(mget(flr((px+5)/8),flr((py+6)/8)),0)
+
+  if clt or clb or crt or crb then
+    deli(bullets,idx)
+  end
+end
+
 function Bullet:draw()
   spr(flr(self.spr+self.spr_c),self.px,self.py,1,1,not self.right)
 end

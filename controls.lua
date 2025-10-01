@@ -2,8 +2,8 @@
 function controls()
   px,py=64-mx,64-my
   vel = 1
-  p.ml = btn(0)
-  p.mr = btn(1)
+  p.ml = btn(0) and not btn(1)
+  p.mr = btn(1) and not btn(0)
   p.mu = btn(2)
   p.md = btn(3)
   p.jump = btn(4)
@@ -18,7 +18,7 @@ function controls()
     add(bullets,b)
   end
 
-  local vel_inc = 0.15 --0.15
+  local vel_inc = 0.12 --0.15
   local vel_dec = 0.5
   local vel_dec_j = 0.06
   if p.ml then

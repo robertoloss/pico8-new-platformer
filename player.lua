@@ -6,7 +6,8 @@ P = {
  mr = true,
  vx = 0,
  vy = 0,
- spr = 33, --17, -- 33,
+ spr = 33,
+ spr_c = 0,
  accy=0,
  canjump=0,
  onground=false,
@@ -27,7 +28,7 @@ setmetatable(p,P)
 
 function reload_gun()
  if not p.can_fire then
-   if p.reload_count >= p.reload_lim and not btn(4) then
+   if p.reload_count >= p.reload_lim and not btn(5) then
     p.can_fire=true
     p.reload_count=0
    else

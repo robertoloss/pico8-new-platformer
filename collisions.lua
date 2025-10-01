@@ -13,8 +13,8 @@ function resolve_collisions()
   end
 
   local hb = {
-    l=p.lr_dir=='r' and 3 or 0,
-    r=p.lr_dir=='l' and -3 or 0,
+    l=p.lr_dir=='r' and 2 or 1,
+    r=p.lr_dir=='l' and -2 or -1,
     t=3
   }
 
@@ -23,9 +23,9 @@ function resolve_collisions()
   bl = fget(mget(flr((nx_tl+hb.l)/8), ceil((ny_tl)/8)), 0)
   br = fget(mget(ceil((nx_tl+hb.r)/8), ceil((ny_tl)/8)), 0)
 
-  local hit_left = flr((mx+p.vx)/8) * 8
+  local hit_left = 1 + flr((mx+p.vx)/8) * 8
   local hit_top = hb.t + flr((my+p.vy)/8) * 8
-  local hit_right = ceil((mx+p.vx)/8) * 8
+  local hit_right = -1 + ceil((mx+p.vx)/8) * 8
   local hit_bottom = ceil((my+p.vy)/8) * 8
 
   if p.vy >= 0 then

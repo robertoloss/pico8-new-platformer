@@ -28,5 +28,9 @@ function anti_cs()
     mx=nmx
     my=nmy
   end
+  tl_near = fget(mget(flr((nx_tl-1)/8), flr(ny_tl/8)), 0)
+  if tl_near then
+    mx=nmx
+  end
 end
 

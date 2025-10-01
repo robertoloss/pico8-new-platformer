@@ -26,11 +26,12 @@ function _update60()
   mx+=p.vx
   my+=p.vy
 
-  anti_cs()
   for i,b in ipairs(bullets) do
     b:move(i)
+    b:collision(i)
   end
   reload_gun()
+  anti_cs()
 end
 
 function _draw()
@@ -45,6 +46,7 @@ function _draw()
   draw_background()
   map(0,0,mx,my,16-ntx,16-nty)
   spr(p.spr,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
+
   local ng = p.just_fired==0 and 0 or 1
   spr(
     17,
