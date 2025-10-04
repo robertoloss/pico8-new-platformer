@@ -18,8 +18,8 @@ function controls()
     add(bullets,b)
   end
 
-  local vel_inc = 0.12 --0.15
-  local vel_dec = 0.5
+  local vel_inc = 0.12--0.15
+  local vel_dec = 1
   local vel_dec_j = 0.06
   if p.ml then
     if p.vx < vel then
@@ -67,6 +67,7 @@ function controls()
   end
 
   if p.j_newlypressed then
+    create_jump_particles()
     sfx(0)
     p.vy=1.0
     p.isjumping=true
