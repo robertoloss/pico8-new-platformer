@@ -15,7 +15,7 @@ function resolve_collisions()
   local hb = {
     l=p.lr_dir=='r' and 2 or 1,
     r=p.lr_dir=='l' and -2 or -1,
-    t=3
+    t=2
   }
 
   tl = fget(mget(flr((nx_tl+hb.l)/8), flr((ny_tl+hb.t)/8)), 0)

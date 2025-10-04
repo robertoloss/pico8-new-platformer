@@ -42,7 +42,7 @@ function _draw()
   draw_background()
 
   map(0,0,mx,my,16-ntx,16-nty)
-  spr(p.spr,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
+  p:draw()
   spr(32,p.px+(p.lr_dir=='l' and 5 or -5),p.py+1,1,1,p.lr_dir=='l' and true or false)
 
   local ng = p.just_fired==0 and 0 or 1

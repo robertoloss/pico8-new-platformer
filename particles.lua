@@ -1,25 +1,23 @@
 
-Particle = {
-  px,py,vx,vy,inc_x,inc_y,col,count,lim,dead=0,0,0,0,0,0,0,0,0,false
-}
+Particle = {}
 
 Particle.__index = Particle
 
-function create_jump_particles()
+function create_jump_particles(p_dir)
   local c=p.lr_dir=='l' and 0.1 or -0.1
   local c_inc=p.lr_dir=='l' and -0.03 or 0.03
   local x_inc=p.lr_dir=='l' and 0.02 or -0.02
   local x_pos=p.lr_dir=='l' and 8 or 0
   for _=0,8 do
     local col=flr(rnd(2))==0 and 1 or 3
-    local newp = new_particle(64+x_pos,71,c,0,x_inc,rnd(8,12)/100,col,13)
+    local newp = new_particle(64+x_pos,71,c,0,x_inc,rnd(8,12)/100,col,13,p_dir)
     add(particles,newp)
     c+=c_inc
   end
 end
 
-function new_particle(px,py,vx,vy,inc_x,inc_y,col,lim)
-  local newp={px=px,py=py,vx=vx,vy=vy,inc_x=inc_x,inc_y=inc_y,col=col,count=0,lim=lim,dead=false}
+function new_particle(px,py,vx,vy,inc_x,inc_y,col,lim,p_dir)
+  local newp={px=px,py=py,vx=vx,vy=vy,inc_x=inc_x,inc_y=inc_y,col=col,count=0,lim=lim,dead=false,p_dir=p_dir}
   setmetatable(newp,Particle)
   return newp
 end
@@ -62,8 +60,8 @@ function draw_particles()
 end
 
 function del_particles()
-  for i,p in ipairs(particles) do
-    if p.dead then
+  for i,pt in ipairs(particles) do
+    if pt.dead or pt.p_dir~=p.lr_dir then
       deli(particles,i)
     end
   end

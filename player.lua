@@ -1,6 +1,5 @@
 
-
-P = {
+Player = {
  px = 64,
  py = 64,
  mr = true,
@@ -19,12 +18,25 @@ P = {
  just_fired = 0
 }
 
-P.__index = P
+Player.__index = Player
 
 p = {}
 
-setmetatable(p,P)
+setmetatable(p,Player)
 
+function Player:draw()
+ if p.vx~=0 then
+  spr(flr(p.spr+p.spr_c),p.px,p.py,1,1,p.lr_dir=='l' and true or false)
+
+  p.spr_c+=0.17
+
+  if p.spr_c>=3 then
+   p.spr_c=0
+  end
+ else
+  spr(p.spr,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
+ end
+end
 
 function reload_gun()
  if not p.can_fire then

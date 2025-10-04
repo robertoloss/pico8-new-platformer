@@ -67,7 +67,7 @@ function controls()
   end
 
   if p.j_newlypressed then
-    create_jump_particles()
+    create_jump_particles(p.lr_dir)
     sfx(0)
     p.vy=1.0
     p.isjumping=true
