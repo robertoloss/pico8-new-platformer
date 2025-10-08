@@ -17,6 +17,7 @@ function _update60()
 
   controls()
   resolve_collisions()
+  update_state()
   p.vy=max(-2,p.vy)
   --p.vx = mid(-1, p.vx, 1)
   mx+=p.vx

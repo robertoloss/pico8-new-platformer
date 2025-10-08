@@ -24,9 +24,16 @@ function anti_cs()
   local bl = fget(mget(flr(nx_tl/8), ceil(ny_tl/8)), 0)
   local br = fget(mget(ceil(nx_tl/8), ceil(ny_tl/8)), 0)
 
-  if not (tl and p.lr_dir=='l') and not tr and not bl and not br then
+  if not tl and not tr and not bl and not br then
     mx=nmx
     my=nmy
+  end
+end
+
+
+function update_state()
+  if p.onground then
+    p.isjumping=false
   end
 end
 

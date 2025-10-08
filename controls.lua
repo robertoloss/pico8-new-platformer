@@ -70,17 +70,18 @@ function controls()
     create_jump_particles(p.lr_dir)
     sfx(0)
     p.vy=1.0
+    p.jumpcheck=true
     p.isjumping=true
     p.jtm=12
     p.accy=0.05
   end
 
-  if p.isjumping then
+  if p.jumpcheck then
     if p.jump and p.jtm > 0 then
       p.vy+=p.accy
       p.accy-=0.005
     else
-      p.jtm,p.isjumping=0,false
+      p.jtm,p.jumpcheck=0,false
       p.accy=0.12
     end
   end

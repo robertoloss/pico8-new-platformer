@@ -25,6 +25,15 @@ p = {}
 setmetatable(p,Player)
 
 function Player:draw()
+ if p.isjumping then
+  spr(38,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
+  return
+ elseif not p.isjumping and p.vy<-0.5 then
+  spr(33,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
+  return
+ else
+  p.spr=33
+ end
  if p.vx~=0 then
   spr(flr(p.spr+p.spr_c),p.px,p.py,1,1,p.lr_dir=='l' and true or false)
 
