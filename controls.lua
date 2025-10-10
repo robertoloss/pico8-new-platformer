@@ -8,9 +8,7 @@ function controls()
   p.md = btn(3)
   p.jump = btn(4)
 
-
   if btn(5) and p.can_fire then
-    --local b = Bullet.new(p.px,p.py,true)
     p.just_fired=1
     sfx(1)
     local x_offs=p.lr_dir=='l' and -6 or 6
