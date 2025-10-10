@@ -30,10 +30,20 @@ function anti_cs()
   end
 end
 
-
 function update_state()
+  if p.vy<-1 and not p.jumping then
+    p.isfalling=true
+  end
   if p.onground then
-    p.isjumping=false
+    p.fuel=p.fuel_max
+    if p.isjumping then
+      sfx(3)
+      p.isjumping=false
+    end
+    if p.isfalling then
+      p.isfalling=false
+      sfx(3)
+    end
   end
 end
 

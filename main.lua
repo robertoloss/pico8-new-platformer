@@ -18,8 +18,8 @@ function _update60()
   controls()
   resolve_collisions()
   update_state()
+
   p.vy=max(-2,p.vy)
-  --p.vx = mid(-1, p.vx, 1)
   mx+=p.vx
   my+=p.vy
 
@@ -53,6 +53,9 @@ function _draw()
     p.py+2,
     1,1,p.lr_dir=='l' and true or false
   )
+  for i=1,p.fuel do
+    pset(p.lr_dir=='l' and 72 or 63,71-i,1)
+  end
 
   for _,b in ipairs(bullets) do
     b:draw()

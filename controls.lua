@@ -8,6 +8,7 @@ function controls()
   p.md = btn(3)
   p.jump = btn(4)
 
+
   if btn(5) and p.can_fire then
     --local b = Bullet.new(p.px,p.py,true)
     p.just_fired=1
@@ -67,13 +68,16 @@ function controls()
   end
 
   if p.j_newlypressed then
-    create_jump_particles(p.lr_dir)
-    sfx(0)
-    p.vy=1.0
-    p.jumpcheck=true
-    p.isjumping=true
-    p.jtm=12
-    p.accy=0.05
+    if p.fuel>0 then
+      p.fuel = max(0,p.fuel-1)
+      create_jump_particles(p.lr_dir)
+      sfx(0)
+      p.vy=1.0
+      p.jumpcheck=true
+      p.isjumping=true
+      p.jtm=12
+      p.accy=0.05
+    end
   end
 
   if p.jumpcheck then

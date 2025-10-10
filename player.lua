@@ -1,21 +1,24 @@
 
 Player = {
- px = 64,
- py = 64,
- mr = true,
- vx = 0,
- vy = 0,
- spr = 33,
- spr_c = 0,
- accy=0,
- canjump=0,
- onground=false,
- jtm=0,
- lr_dir="r",
- can_fire = true,
- reload_count = 0,
- reload_lim = 8,
- just_fired = 0
+  px = 64,
+  py = 64,
+  mr = true,
+  vx = 0,
+  vy = 0,
+  spr = 33,
+  spr_c = 0,
+  accy=0,
+  canjump=0,
+  isjumping=false,
+  onground=false,
+  jtm=0,
+  lr_dir="r",
+  can_fire = true,
+  reload_count = 0,
+  reload_lim = 8,
+  just_fired = 0,
+  fuel_max=2,
+  fuel=2
 }
 
 Player.__index = Player
@@ -29,11 +32,14 @@ function Player:draw()
   spr(38,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
   return
  elseif not p.isjumping and p.vy<-0.5 then
-  spr(33,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
+  spr(38,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
   return
  else
   p.spr=33
  end
+  if btn(2) and p.vx==0 and p.vy==0 then
+    p.spr=39
+  end
  if p.vx~=0 then
   spr(flr(p.spr+p.spr_c),p.px,p.py,1,1,p.lr_dir=='l' and true or false)
 
