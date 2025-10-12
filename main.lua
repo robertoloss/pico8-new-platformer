@@ -28,7 +28,9 @@ function _update60()
     b:collision(i)
   end
   reload_gun()
+
   anti_cs()
+
   update_particles()
   del_particles()
   move_particles()

@@ -49,7 +49,7 @@ function Bullet:collision(idx)
 end
 
 function Bullet:draw()
-  spr(flr(self.spr+self.spr_c),self.px,self.py,1,1,not self.right)
+  spr(flr(self.spr+self.spr_c),self.px,self.py,1,1,self.right)
 end
 
 

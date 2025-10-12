@@ -18,9 +18,11 @@ function resolve_collisions()
     t=2
   }
 
+  local bl_fix = p.vx==0 and 0.5 or 0
+
   tl = fget(mget(flr((nx_tl+hb.l)/8), flr((ny_tl+hb.t)/8)), 0)
   tr = fget(mget(ceil((nx_tl+hb.r)/8), flr((ny_tl+hb.t)/8)), 0)
-  bl = fget(mget(flr((nx_tl+hb.l)/8), ceil((ny_tl)/8)), 0)
+  bl = fget(mget(flr((nx_tl+hb.l+bl_fix)/8), ceil((ny_tl)/8)), 0)
   br = fget(mget(ceil((nx_tl+hb.r)/8), ceil((ny_tl)/8)), 0)
 
   local hit_left = 1 + flr((mx+p.vx)/8) * 8
