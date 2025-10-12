@@ -63,5 +63,5 @@ function _draw()
     b:draw()
   end
   draw_particles()
-  debugging()
+  --debugging()
 end
