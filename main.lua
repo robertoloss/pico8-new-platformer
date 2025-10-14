@@ -4,6 +4,7 @@ function _init()
 	my=-1-(8*2)
   bullets={}
   particles={}
+  enemies={}
 end
 
 function _update60()
