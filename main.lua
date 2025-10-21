@@ -5,6 +5,7 @@ function _init()
   bullets={}
   particles={}
   enemies={}
+  generate_enemies(enemies)
 end
 
 function _update60()
@@ -23,6 +24,7 @@ function _update60()
   p.vy=max(-2,p.vy)
   mx+=p.vx
   my+=p.vy
+  move_enemies()
 
   for i,b in ipairs(bullets) do
     b:move(i)
@@ -44,6 +46,7 @@ function _draw()
   cls()
 
   draw_background()
+  draw_enemies()
 
   map(0,0,mx,my,16-ntx,16-nty)
   p:draw()
@@ -64,5 +67,5 @@ function _draw()
     b:draw()
   end
   draw_particles()
-  --debugging()
+  debugging()
 end
