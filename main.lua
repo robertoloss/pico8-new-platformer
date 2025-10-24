@@ -25,6 +25,7 @@ function _update60()
   mx+=p.vx
   my+=p.vy
   move_enemies()
+  enemies_collisions()
 
   for i,b in ipairs(bullets) do
     b:move(i)
