@@ -24,7 +24,7 @@ function Enemy:draw()
 end
 
 function Enemy:move()
-  local gravity=0
+  local gravity=0.6
   self.map_x+=self.vx
   self.map_y+=self.vy+gravity
   self.px+=(p.vx + self.vx)
@@ -46,10 +46,12 @@ Robot.spr=25
 function Robot:collisions()
   posx=self.map_x
   posy=self.map_y
-  if flag(posx,posy+8,1) then
+  if flag(posx,posy+8,0) then
     hit="true"
     self.py=flr(self.py/8)*8
     self.map_y=flr(self.map_y/8)*8
+  else
+    hit="false"
   end
 end
 
