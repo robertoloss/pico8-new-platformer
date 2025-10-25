@@ -47,7 +47,8 @@ end
 
 function draw_del_enemies()
   for de in all(del_enemies) do
-    spr(29,de.e.px,de.e.py,1,1,de.e.vx<0)
+    de.e:draw()
+    --spr(29,de.e.px,de.e.py,1,1,de.e.vx<0)
   end
 end
 
@@ -92,8 +93,10 @@ function Robot:bullet(b)
   local dy = abs((b.py+3) - (self.py+3))
 
   if dx < 3 and dy < 6 then
-    del_e=del(enemies,self)
-    dt={
+    local del_e=del(enemies,self)
+    del_e.spr=29
+    del_e.spr_lim=30
+    local dt={
       e=del_e,
       c=0
     }
@@ -106,8 +109,13 @@ function respawn_enemies()
   for de in all(del_enemies) do
     if de.c<400 then
       de.c+=1
+      if de.c>=340 and de.e.spr~=30 then
+        de.e.spr_lim=31
+      end
     else
       e=del(del_enemies,de)
+      e.e.spr=25
+      e.e.spr_lim=29
       add(enemies,e.e)
     end
   end
