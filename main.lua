@@ -67,6 +67,7 @@ function _draw()
   for _,b in ipairs(bullets) do
     b:draw()
   end
+  check_if_bullet_hit_enemies()
   draw_particles()
   debugging()
 end

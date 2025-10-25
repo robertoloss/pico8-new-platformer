@@ -1,4 +1,3 @@
-
 Enemy={
   init_px=0,
   init_py=0,
@@ -8,7 +7,9 @@ Enemy={
   py=0,
   vx=0,
   vy=0,
-  spr=0
+  spr=0,
+  spr_lim=0,
+  spr_c=0
 }
 Enemy.__index=Enemy
 
@@ -20,7 +21,11 @@ function Enemy:new(px,py,tile_x,tile_y,vx,vy)
 end
 
 function Enemy:draw()
-  spr(self.spr,self.px,self.py)
+  self.spr_c +=abs(self.vx)
+  if self.spr+self.spr_c>=self.spr_lim then
+    self.spr_c=0
+  end
+  spr(flr(self.spr+self.spr_c),self.px,self.py,1,1,self.vx<=0)
 end
 
 function Enemy:move()
@@ -42,16 +47,48 @@ end
 
 Robot=subclass(Enemy)
 Robot.spr=25
-
+Robot.spr_lim=29
+Robot.hb_l=2
+Robot.hb_r=2
 
 function Robot:collisions()
-  posx=self.map_x
-  posy=self.map_y
-  if flag(posx,posy+8,0) then
+  local posx=self.map_x
+  local posy=self.map_y
+  if self.vy>0 and flag(posx+(8-self.hb_r),posy+8,0) or flag(posx+self.hb_l,posy+8,0) then
     self.map_y=flr(self.map_y/8)*8
     self.vy=0
-  else
-    hit="false"
+  end
+  if self.vy<0 and flag(posx+(8-self.hb_r),posy,0) or flag(posx+self.hb_l,posy,0) then
+    self.map_y=ceil(self.map_y/8)*8
+    self.vy=0
+  end
+  if self.vx<0 and flag(posx+self.hb_l,posy,0) or flag(posx+self.hb_l,posy+7,0)
+    or not flag(posx+self.hb_l,posy+8,0) then
+    self.map_x=-self.hb_l + ceil(self.map_x/8)*8
+    self.vx -= 2*self.vx
+  end
+  if self.vx>0 and flag(posx+(8-self.hb_r),posy,0) or flag(posx+(8-self.hb_r),posy+7,0)
+    or not flag(posx+(8-self.hb_r),posy+8,0) then
+    self.map_x=self.hb_r + flr(self.map_x/8)*8
+    self.vx -= 2*self.vx
+  end
+end
+
+function Robot:bullet(b)
+  local dx = abs((b.px+3) - (self.px+3))
+  local dy = abs((b.py+3) - (self.py+3))
+
+  if dx < 3 and dy < 6 then
+    del(enemies,self)
+    del(bullets,b)
+  end
+end
+
+function check_if_bullet_hit_enemies()
+  for e in all(enemies) do
+    for b in all(bullets) do
+      e:bullet(b)
+    end
   end
 end
 
@@ -59,7 +96,7 @@ function generate_enemies(enemies)
   local map_width = 128
   local map_height = 128
 
-  local velocities = {(-0.1)}
+  local velocities = {-0.1,-0.15,0.1,0.15}
 
   for x = 0, map_width - 1 do
     for y = 0, map_height - 1 do
