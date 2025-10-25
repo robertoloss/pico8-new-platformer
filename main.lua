@@ -5,6 +5,7 @@ function _init()
   bullets={}
   particles={}
   enemies={}
+  del_enemies={}
   generate_enemies(enemies)
 end
 
@@ -24,6 +25,7 @@ function _update60()
   p.vy=max(-2,p.vy)
   mx+=p.vx
   my+=p.vy
+  respawn_enemies()
   move_enemies()
   enemies_collisions()
 
@@ -34,10 +36,12 @@ function _update60()
   reload_gun()
 
   anti_cs()
+  move_del_enemies()
 
   update_particles()
   del_particles()
   move_particles()
+  check_if_bullet_hit_enemies()
 end
 
 function _draw()
@@ -48,6 +52,7 @@ function _draw()
 
   draw_background()
   draw_enemies()
+  draw_del_enemies()
 
   map(0,0,mx,my,16-ntx,16-nty)
   p:draw()
@@ -67,7 +72,6 @@ function _draw()
   for _,b in ipairs(bullets) do
     b:draw()
   end
-  check_if_bullet_hit_enemies()
   draw_particles()
   debugging()
 end

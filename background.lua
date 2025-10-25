@@ -20,7 +20,7 @@ function draw_background()
   end
 
   cx = flr(cx)+0.5
-  cy = flr(cy)+0.6
+  cy = flr(cy)+0.5
 
   local y=-lim
 

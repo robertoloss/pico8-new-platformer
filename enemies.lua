@@ -38,6 +38,19 @@ function Enemy:move()
   --self.py=flr(self.py)+0.5
 end
 
+function move_del_enemies()
+  for de in all(del_enemies) do
+    de.e.px=de.e.map_x+mx
+    de.e.py=de.e.map_y+my
+  end
+end
+
+function draw_del_enemies()
+  for de in all(del_enemies) do
+    spr(29,de.e.px,de.e.py,1,1,de.e.vx<0)
+  end
+end
+
 function subclass(class)
   local subc={}
   subc.__index=subc
@@ -79,8 +92,24 @@ function Robot:bullet(b)
   local dy = abs((b.py+3) - (self.py+3))
 
   if dx < 3 and dy < 6 then
-    del(enemies,self)
+    del_e=del(enemies,self)
+    dt={
+      e=del_e,
+      c=0
+    }
+    add(del_enemies,dt)
     del(bullets,b)
+  end
+end
+
+function respawn_enemies()
+  for de in all(del_enemies) do
+    if de.c<400 then
+      de.c+=1
+    else
+      e=del(del_enemies,de)
+      add(enemies,e.e)
+    end
   end
 end
 
