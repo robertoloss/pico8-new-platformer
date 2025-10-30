@@ -4,6 +4,7 @@ function debugging()
   --print("cx: "..tostring(cx).." cy:"..tostring(cy))
   print("vx: "..tostring(p.vx))
   print("vy: "..tostring(p.vy))
+  print("computers: "..tostring(#computers))
   --print("enemies: "..tostring(#enemies))
   -- print("jpressed: "..tostring(p.jpressed))
   -- print("tl: "..tostring(tl).." tr: "..tostring(tr))
@@ -21,4 +22,7 @@ function debugging()
   -- for _,e in ipairs(enemies) do
   --   print(tostring(e.px).." "..tostring(e.py))
   -- end
+  for _,c in ipairs(computers) do
+    print(tostring(c.px).." "..tostring(c.py))
+  end
 end

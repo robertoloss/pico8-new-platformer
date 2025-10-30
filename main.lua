@@ -6,7 +6,8 @@ function _init()
   particles={}
   enemies={}
   del_enemies={}
-  generate_enemies(enemies)
+  computers={}
+  generate_entities()
 end
 
 function _update60()
@@ -41,6 +42,7 @@ function _update60()
   update_particles()
   del_particles()
   move_particles()
+  computers_move()
   check_if_bullet_hit_enemies()
 end
 
@@ -53,6 +55,7 @@ function _draw()
   draw_background()
   draw_enemies()
   draw_del_enemies()
+  draw_computers()
 
   map(0,0,mx,my,16-ntx,16-nty)
   p:draw()

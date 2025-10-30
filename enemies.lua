@@ -129,7 +129,7 @@ function check_if_bullet_hit_enemies()
   end
 end
 
-function generate_enemies(enemies)
+function generate_entities()
   local map_width = 128
   local map_height = 128
 
@@ -142,6 +142,14 @@ function generate_enemies(enemies)
         local new_enemy = Robot:new((x+1)*8-128,(y+1)*8-24,x,y,rnd(velocities),0)
         mset(x,y,0)
         add(enemies, new_enemy)
+      end
+      if fget(tile, 6) then
+        local new_c = Computer:new((x+1)*8-128,(y+1)*8-24,x,y)
+        mset(x,y,0)
+        mset(x+1,y,0)
+        mset(x,y+1,0)
+        mset(x+1,y+1,0)
+        add(computers, new_c)
       end
     end
   end
