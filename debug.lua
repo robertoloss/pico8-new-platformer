@@ -1,6 +1,6 @@
 
 function debugging()
-  print("mx: "..tostring(mx).." my:"..tostring(my),1)
+  print("mx: "..tostring(mx).." my:"..tostring(my),0,0,1)
   --print("cx: "..tostring(cx).." cy:"..tostring(cy))
   print("vx: "..tostring(p.vx))
   print("vy: "..tostring(p.vy))

@@ -44,6 +44,8 @@ function _update60()
   move_particles()
   computers_move()
   check_if_bullet_hit_enemies()
+  check_can_search()
+  is_player_searching()
 end
 
 function _draw()
@@ -59,22 +61,27 @@ function _draw()
 
   map(0,0,mx,my,16-ntx,16-nty)
   p:draw()
-  spr(32,p.px+(p.lr_dir=='l' and 5 or -5),p.py+1,1,1,p.lr_dir=='l' and true or false)
 
-  local ng = p.just_fired==0 and 0 or 1
-  spr(
-    17,
-    p.px+(p.lr_dir=='l' and -(3-ng) or 3-ng),
-    p.py+2,
-    1,1,p.lr_dir=='l' and true or false
-  )
-  for i=1,p.fuel do
-    pset(p.lr_dir=='l' and 72 or 63,71-i,1)
+  if not p.is_searching then
+    spr(32,p.px+(p.lr_dir=='l' and 5 or -5),p.py+1,1,1,p.lr_dir=='l' and true or false)
+    local ng = p.just_fired==0 and 0 or 1
+    spr(
+      17,
+      p.px+(p.lr_dir=='l' and -(3-ng) or 3-ng),
+      p.py+2,
+      1,1,p.lr_dir=='l' and true or false
+    )
+    for i=1,p.fuel do
+      pset(p.lr_dir=='l' and 72 or 63,71-i,1)
+    end
   end
+
 
   for _,b in ipairs(bullets) do
     b:draw()
   end
+
   draw_particles()
+  draw_can_search()
   debugging()
 end

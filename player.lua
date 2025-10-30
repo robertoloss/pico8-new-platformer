@@ -18,7 +18,9 @@ Player = {
   reload_lim = 8,
   just_fired = 0,
   fuel_max=2,
-  fuel=2
+  fuel=2,
+  can_search=false,
+  is_searching=false
 }
 
 Player.__index = Player
@@ -35,7 +37,11 @@ function Player:draw()
   spr(38,p.px,p.py,1,1,p.lr_dir=='l' and true or false)
   return
  else
-  p.spr=33
+  if p.is_searching then
+    p.spr=49
+  else
+    p.spr=33
+  end
  end
   if btn(2) and p.vx==0 and p.vy==0 then
     p.spr=39
@@ -64,4 +70,11 @@ function reload_gun()
  end
 end
 
+function is_player_searching()
+  if p.can_search and p.md and not p.isjumping and p.vy>-0.5 then
+    p.is_searching=true
+  else
+    p.is_searching=false
+  end
+end
 

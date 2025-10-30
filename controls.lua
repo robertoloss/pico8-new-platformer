@@ -8,13 +8,15 @@ function controls()
   p.md = btn(3)
   p.jump = btn(4)
 
-  if btn(5) and p.can_fire then
-    p.just_fired=1
-    sfx(1)
-    local x_offs=p.lr_dir=='l' and -6 or 6
-    local b = Bullet:new(p.px+x_offs,p.py+1,p.lr_dir=='r')
-    p.can_fire = false
-    add(bullets,b)
+  if not p.is_searching then
+    if btn(5) and p.can_fire then
+      p.just_fired=1
+      sfx(1)
+      local x_offs=p.lr_dir=='l' and -6 or 6
+      local b = Bullet:new(p.px+x_offs,p.py+1,p.lr_dir=='r')
+      p.can_fire = false
+      add(bullets,b)
+    end
   end
 
   local vel_inc = 0.12--0.15

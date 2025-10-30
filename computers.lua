@@ -25,10 +25,23 @@ function Computer:draw()
   spr(69,self.px+8,self.py)
   spr(84,self.px,self.py+8)
   spr(85,self.px+8,self.py+8)
-  --fset(6,self.px,self.py)
-  --fset(6,self.px+8,self.py)
-  --fset(6,self.px,self.py+8)
-  --fset(6,self.px+8,self.py+8)
+end
+
+function check_can_search()
+  local can_search=false
+  for _,c in ipairs(computers) do
+    if c.px>54 and c.px<66 and c.py>56 and c.py<64 then
+      can_search=true
+      break
+    end
+  end
+  p.can_search=can_search
+end
+
+function draw_can_search()
+  if p.can_search then
+    print(chr(131).." to search", 50, 48, 7)
+  end
 end
 
 function draw_computers()
