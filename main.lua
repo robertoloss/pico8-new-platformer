@@ -46,6 +46,7 @@ function _update60()
   check_if_bullet_hit_enemies()
   check_can_search()
   is_player_searching()
+  search_computer()
 end
 
 function _draw()
@@ -55,9 +56,9 @@ function _draw()
   cls()
 
   draw_background()
+  draw_computers()
   draw_enemies()
   draw_del_enemies()
-  draw_computers()
 
   map(0,0,mx,my,16-ntx,16-nty)
   p:draw()
@@ -76,12 +77,11 @@ function _draw()
     end
   end
 
-
   for _,b in ipairs(bullets) do
     b:draw()
   end
 
   draw_particles()
   draw_can_search()
-  debugging()
+  --debugging()
 end

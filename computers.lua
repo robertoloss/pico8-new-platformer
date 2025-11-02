@@ -4,7 +4,8 @@ Computer={
   py=0,
   map_x,
   map_y,
-  search=100
+  search=200,
+  cur_c=0
 }
 Computer.__index=Computer
 
@@ -20,33 +21,64 @@ function Computer:move()
   self.py=self.map_y+my
 end
 
-function Computer:draw()
+function Computer:draw(i)
   spr(68,self.px,self.py)
   spr(69,self.px+8,self.py)
   spr(84,self.px,self.py+8)
   spr(85,self.px+8,self.py+8)
+  if self.search>0 then
+    if p.is_searching and p.cp_selected==i then
+      local val=ceil(0.2*(self.search/7))
+      rectfill(self.px+4,self.py+4,self.px+4+7,self.py+4+6,9)
+      rectfill(self.px+5,self.py+5,self.px+4+val,self.py+5,11)
+    else
+      self.cur_c+=1
+      local int=20
+      if self.cur_c>=int then
+        pset(self.px+5,self.py+9,11)
+      end
+      if self.cur_c>=int*2 then
+        self.cur_c=0
+      end
+    end
+  else
+    rectfill(self.px+3,self.py+3,self.px+4+8,self.py+4+7,9)
+  end
 end
 
 function check_can_search()
   local can_search=false
-  for _,c in ipairs(computers) do
-    if c.px>54 and c.px<66 and c.py>56 and c.py<64 then
+  for i,c in ipairs(computers) do
+    if c.px>54 and c.px<66 and c.py>56 and c.py<64 and c.search>0 then
       can_search=true
+      p.cp_selected=i
       break
     end
   end
   p.can_search=can_search
 end
 
+function search_computer()
+  if p.is_searching then
+    computers[p.cp_selected].search-=1
+  end
+end
+
 function draw_can_search()
   if p.can_search then
-    print(chr(131).." to search", 50, 48, 7)
+    local s=computers[p.cp_selected].search
+    local len_s=#tostring(s)
+    local t=len_s==3 and 0 or len_s==2 and 4 or 8
+    local ox=58
+    rectfill(ox,46,ox+22-t,54,7)
+    print(chr(131)..""..s, ox+2, 48, 1)
+    print(chr(131)..""..s, ox+2, 48, 1)
   end
 end
 
 function draw_computers()
-  for _,c in ipairs(computers) do
-    c:draw()
+  for i,c in ipairs(computers) do
+    c:draw(i)
   end
 end
 function computers_move()

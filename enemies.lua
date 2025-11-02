@@ -107,9 +107,9 @@ end
 
 function respawn_enemies()
   for de in all(del_enemies) do
-    if de.c<400 then
+    if de.c<200 then
       de.c+=1
-      if de.c>=340 and de.e.spr~=30 then
+      if de.c>=160 and de.e.spr~=30 then
         de.e.spr_lim=31
       end
     else

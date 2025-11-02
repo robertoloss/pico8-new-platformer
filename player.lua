@@ -20,7 +20,8 @@ Player = {
   fuel_max=2,
   fuel=2,
   can_search=false,
-  is_searching=false
+  is_searching=false,
+  cp_selected=nil
 }
 
 Player.__index = Player
