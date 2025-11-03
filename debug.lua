@@ -4,8 +4,12 @@ function debugging()
   --print("cx: "..tostring(cx).." cy:"..tostring(cy))
   print("vx: "..tostring(p.vx))
   print("vy: "..tostring(p.vy))
-  print("computers: "..tostring(#computers))
-  print("cp_selected"..tostring(p.cp_selected))
+  print("enemy collision: "..tostring(enemy_collision))
+  print("end move: "..tostring(end_move))
+  print("p dead:"..tostring(p.is_dead))
+  print("p c_dead:"..tostring(p.spr_c_death))
+  -- print("computers: "..tostring(#computers))
+  -- print("cp_selected"..tostring(p.cp_selected))
   --print("enemies: "..tostring(#enemies))
   -- print("jpressed: "..tostring(p.jpressed))
   -- print("tl: "..tostring(tl).." tr: "..tostring(tr))
@@ -23,9 +27,9 @@ function debugging()
   -- for _,e in ipairs(enemies) do
   --   print(tostring(e.px).." "..tostring(e.py))
   -- end
-  for i,c in ipairs(computers) do
-    print(i)
-    print(tostring(c.px).." "..tostring(c.py))
-    print(tostring(c.search))
-  end
+  --for i,c in ipairs(computers) do
+  --  print(i)
+  --  print(tostring(c.px).." "..tostring(c.py))
+  --  print(tostring(c.search))
+  --end
 end

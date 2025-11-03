@@ -11,7 +11,7 @@ function controls()
   if not p.is_searching then
     if btn(5) and p.can_fire then
       p.just_fired=1
-      sfx(1)
+      sfx(4)
       local x_offs=p.lr_dir=='l' and -6 or 6
       local b = Bullet:new(p.px+x_offs,p.py+1,p.lr_dir=='r')
       p.can_fire = false
@@ -56,7 +56,7 @@ function controls()
     end
   end
 
-  if btn(4) then
+  if p.jump then
     if p.jpressed == false then
       p.j_newlypressed = true
     else

@@ -7,6 +7,7 @@ Player = {
   vy = 0,
   spr = 33,
   spr_c = 0,
+  spr_c_death=0,
   accy=0.12,
   canjump=0,
   isjumping=false,
@@ -21,7 +22,8 @@ Player = {
   fuel=2,
   can_search=false,
   is_searching=false,
-  cp_selected=nil
+  cp_selected=nil,
+  is_dead=false,
 }
 
 Player.__index = Player
@@ -78,4 +80,32 @@ function is_player_searching()
     p.is_searching=false
   end
 end
+
+mm_c=0
+function player_dies()
+  mset(0,8,8)
+  spr(40+flr(p.spr_c_death),p.px,p.py,1,1,p.lr_dir=='l')
+  p.spr_c_death+=0.17
+
+  if mm_c%2==0 then
+    mx+=1
+    --my+=1
+  else
+    mx-=1
+    --my-=1
+  end
+  mm_c+=1
+  if p.spr_c_death>7 then
+    mm_c=0
+    p.vx=0
+    p.vy=0
+    p.is_dead=false
+    p.spr_c_death=0
+    p.onground=true
+    mx=mx_init
+    my=my_init+1
+  end
+end
+
+
 

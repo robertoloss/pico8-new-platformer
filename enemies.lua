@@ -20,10 +20,12 @@ function Enemy:new(px,py,tile_x,tile_y,vx,vy)
   return entity
 end
 
-function Enemy:draw()
-  self.spr_c +=abs(self.vx)
-  if self.spr+self.spr_c>=self.spr_lim then
-    self.spr_c=0
+function Enemy:draw(p_is_dead)
+  if not p_is_dead then
+    self.spr_c +=abs(self.vx)
+    if self.spr+self.spr_c>=self.spr_lim then
+      self.spr_c=0
+    end
   end
   spr(flr(self.spr+self.spr_c),self.px,self.py,1,1,self.vx<=0)
 end
@@ -155,9 +157,9 @@ function generate_entities()
   end
 end
 
-function draw_enemies()
+function draw_enemies(p_is_dead)
   for _,e in ipairs(enemies) do
-    e:draw()
+    e:draw(p_is_dead)
   end
 end
 
@@ -171,4 +173,25 @@ function enemies_collisions()
   for _,e in ipairs(enemies) do
     e:collisions()
   end
+end
+
+function Enemy:player_collision()
+  local x_ok_l = self.px+1<64+5 and self.px+6>=66
+  local x_ok_r = self.px+6>66 and self.px+1<64+5
+  local y_ok = self.py<64+7 and self.py>64
+
+  local check_ok=x_ok_r or x_ok_l
+
+  if check_ok and y_ok then
+    return true
+  end
+end
+
+function check_enemies_collision()
+  for _,e in ipairs(enemies) do
+    if e:player_collision() then
+      return true
+    end
+  end
+  return false
 end

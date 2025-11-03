@@ -1,26 +1,29 @@
 cx = 0
 cy = 0
 
-function draw_background()
-  cx += p.vx
-  cy += p.vy
-  lim=32
+function draw_background(p_is_dead)
+  if not p_is_dead then
+    cx += p.vx
+    cy += p.vy
 
-  if cx>lim then
-    cx=-lim+(cx-lim)
-  end
-  if cx<-lim then
-    cx=lim-(abs(cx+lim))
-  end
-  if cy>lim then
-    cy=-lim+(cy-lim)
-  end
-  if cy<-lim then
-    cy=lim-(abs(cy+lim))
-  end
+    lim=32
 
-  cx = flr(cx)+0.5
-  cy = flr(cy)+0.5
+    if cx>lim then
+      cx=-lim+(cx-lim)
+    end
+    if cx<-lim then
+      cx=lim-(abs(cx+lim))
+    end
+    if cy>lim then
+      cy=-lim+(cy-lim)
+    end
+    if cy<-lim then
+      cy=lim-(abs(cy+lim))
+    end
+
+    cx = flr(cx)+0.5
+    cy = flr(cy)+0.5
+  end
 
   local y=-lim
 

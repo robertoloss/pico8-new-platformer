@@ -1,5 +1,7 @@
 
 function _init()
+	mx_init=-128
+	my_init=-1-(8*2)
 	mx=-128
 	my=-1-(8*2)
   bullets={}
@@ -11,6 +13,9 @@ function _init()
 end
 
 function _update60()
+  if p.is_dead then
+    return
+  end
   if p.just_fired > 0 then
     if p.just_fired > 2 then
       p.just_fired = 0
@@ -47,6 +52,7 @@ function _update60()
   check_can_search()
   is_player_searching()
   search_computer()
+  p.is_dead = check_enemies_collision()
 end
 
 function _draw()
@@ -55,33 +61,39 @@ function _draw()
 
   cls()
 
-  draw_background()
+  draw_background(p.is_dead)
+  map(0,0,mx,my,16-ntx,16-nty)
+
   draw_computers()
-  draw_enemies()
+  draw_enemies(p.is_dead)
   draw_del_enemies()
 
-  map(0,0,mx,my,16-ntx,16-nty)
-  p:draw()
+  if not p.is_dead then
+    p:draw()
 
-  if not p.is_searching then
-    spr(32,p.px+(p.lr_dir=='l' and 5 or -5),p.py+1,1,1,p.lr_dir=='l' and true or false)
-    local ng = p.just_fired==0 and 0 or 1
-    spr(
-      17,
-      p.px+(p.lr_dir=='l' and -(3-ng) or 3-ng),
-      p.py+2,
-      1,1,p.lr_dir=='l' and true or false
-    )
-    for i=1,p.fuel do
-      pset(p.lr_dir=='l' and 72 or 63,71-i,1)
+    if not p.is_searching then
+      spr(32,p.px+(p.lr_dir=='l' and 5 or -5),p.py+1,1,1,p.lr_dir=='l' and true or false)
+      local ng = p.just_fired==0 and 0 or 1
+      spr(
+        17,
+        p.px+(p.lr_dir=='l' and -(3-ng) or 3-ng),
+        p.py+2,
+        1,1,p.lr_dir=='l' and true or false
+      )
+      for i=1,p.fuel do
+        pset(p.lr_dir=='l' and 72 or 63,71-i,1)
+      end
     end
-  end
 
-  for _,b in ipairs(bullets) do
-    b:draw()
-  end
+    for _,b in ipairs(bullets) do
+      b:draw()
+    end
 
-  draw_particles()
-  draw_can_search()
-  --debugging()
+    draw_particles()
+    draw_can_search()
+    --debugging()
+  else
+    --debugging()
+    player_dies()
+  end
 end
