@@ -82,10 +82,15 @@ function is_player_searching()
 end
 
 mm_c=0
+p_d_sound=false
 function player_dies()
   mset(0,8,8)
   spr(40+flr(p.spr_c_death),p.px,p.py,1,1,p.lr_dir=='l')
-  p.spr_c_death+=0.17
+  p.spr_c_death+=0.08
+  if p_d_sound==false then
+    sfx(5)
+    p_d_sound=true
+  end
 
   if mm_c%2==0 then
     mx+=1
@@ -96,6 +101,8 @@ function player_dies()
   end
   mm_c+=1
   if p.spr_c_death>7 then
+    sfx(-1)
+    p_d_sound=false
     mm_c=0
     p.vx=0
     p.vy=0
