@@ -26,13 +26,15 @@ function draw_background(p_is_dead)
   end
 
   local y=-lim
+  local step=4
+  local num=8
 
-  while y<16+lim do
+  while y<lim do
     local x=-lim
-    while x<16+lim do
-      map(124,60,(8*x)+cx/2,(8*y)+cy/2)
-      x+=4
+    while x<lim do
+      map(124,60,(num*x)+cx/2,(num*y)+cy/2,4,4)
+      x+=step
     end
-    y+=4
+    y+=step
   end
 end
