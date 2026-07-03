@@ -36,9 +36,9 @@ function check_pickups_collision()
     if pickup:player_collision() then
       if pickup.active then
         sfx(6)
+        pickup.active=false
+        p.bullets_to_fire = 3
       end
-      pickup.active=false
-      p.bullets_to_fire = 3
     end
   end
 end
