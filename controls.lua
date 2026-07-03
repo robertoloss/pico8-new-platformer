@@ -22,16 +22,16 @@ function controls()
 
   local vel_inc = 0.12--0.15
   local vel_dec = 1
-  local vel_dec_j = 0.06
+  local vel_dec_j = 1 --0.06
   if p.ml then
     if p.vx < vel then
-      p.vx += vel_inc
+      p.vx = vel -- += vel_inc
     else
       p.vx = vel
     end
   elseif p.mr then
     if p.vx > -vel then
-      p.vx -= vel_inc
+      p.vx = -vel -- -= vel_inc
     else
       p.vx = -vel
     end
@@ -91,10 +91,12 @@ function controls()
     end
   end
 
+  local max_gravity = -2.0
+
   if p.jtm==0 then
     if not p.onground then
-      if p.vy > -2.0 then
-        p.accy+=0.00075
+      if p.vy > max_gravity then
+        p.accy+=0.0001
         p.vy-=p.accy
       end
     end

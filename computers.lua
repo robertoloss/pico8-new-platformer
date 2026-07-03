@@ -64,15 +64,15 @@ end
 
 function draw_can_search()
   if p.can_search then
-    local s=computers[p.cp_selected].search
-    local len_s=#tostring(s)
-    local t=len_s==3 and 0 or len_s==2 and 4 or 8
+    local s=flr(computers[p.cp_selected].search/2)
     local ox=62
     if not p.md then
       rectfill(ox,46,ox+10,54,7)
       print(chr(131), ox+2, 48, 1)
     end
-    --print(chr(131)..""..s, ox+2, 48, 1)
+    local len_box = s==100 and 22 or (s>9 and 18 or 14)
+    rectfill(ox,46,ox+len_box,54,7)
+    print(chr(131)..""..s, ox+2, 48, 1)
   end
 end
 
