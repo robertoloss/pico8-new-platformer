@@ -7,6 +7,7 @@ function _init()
   bullets={}
   particles={}
   enemies={}
+  pickups={}
   del_enemies={}
   computers={}
   generate_entities()
@@ -28,12 +29,15 @@ function _update60()
   resolve_collisions()
   update_state()
 
-  p.vy=max(-2,p.vy)
+  p.vy=max(-1.8,p.vy)
   mx+=p.vx
   my+=p.vy
   respawn_enemies()
   move_enemies()
+  move_pickups()
   enemies_collisions()
+  check_pickups_collision()
+  activate_pickups()
 
   for i,b in ipairs(bullets) do
     b:move(i)
@@ -67,6 +71,7 @@ function _draw()
   draw_computers()
   draw_enemies(p.is_dead)
   draw_del_enemies()
+  draw_pickups()
 
   if not p.is_dead then
     p:draw()
@@ -74,12 +79,24 @@ function _draw()
     if not p.is_searching then
       spr(32,p.px+(p.lr_dir=='l' and 5 or -5),p.py+1,1,1,p.lr_dir=='l' and true or false)
       local ng = p.just_fired==0 and 0 or 1
-      spr(
-        17,
-        p.px+(p.lr_dir=='l' and -(3-ng) or 3-ng),
-        p.py+2,
-        1,1,p.lr_dir=='l' and true or false
-      )
+      if p.bullets_to_fire > 0 then
+        spr(
+          17,
+          p.px+(p.lr_dir=='l' and -(3-ng) or 3-ng),
+          p.py+2,
+          1,1,p.lr_dir=='l' and true or false
+        )
+        local j=0
+        local vb = 63
+        for i=1,p.bullets_to_fire do
+          if p.lr_dir=='l' then
+            pset(65+j,vb,3)
+          else
+            pset(70-j,vb,3)
+          end
+          j +=1
+        end
+      end
       for i=1,p.fuel do
         pset(p.lr_dir=='l' and 72 or 63,71-i,1)
       end
@@ -88,6 +105,7 @@ function _draw()
     for _,b in ipairs(bullets) do
       b:draw()
     end
+    check_collision_w_bullets_reload()
 
     draw_particles()
     draw_can_search()

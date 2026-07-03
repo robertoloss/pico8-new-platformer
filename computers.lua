@@ -1,13 +1,11 @@
 
 Computer={
-  px=0,
-  py=0,
-  map_x,
-  map_y,
   search=200,
   cur_c=0
 }
 Computer.__index=Computer
+
+setmetatable(Computer, Entity)
 
 function Computer:new(px,py,tile_x,tile_y)
   local c={px=px,py=py,map_x=tile_x*8,map_y=tile_y*8}
@@ -69,10 +67,12 @@ function draw_can_search()
     local s=computers[p.cp_selected].search
     local len_s=#tostring(s)
     local t=len_s==3 and 0 or len_s==2 and 4 or 8
-    local ox=58
-    rectfill(ox,46,ox+22-t,54,7)
-    print(chr(131)..""..s, ox+2, 48, 1)
-    print(chr(131)..""..s, ox+2, 48, 1)
+    local ox=62
+    if not p.md then
+      rectfill(ox,46,ox+10,54,7)
+      print(chr(131), ox+2, 48, 1)
+    end
+    --print(chr(131)..""..s, ox+2, 48, 1)
   end
 end
 

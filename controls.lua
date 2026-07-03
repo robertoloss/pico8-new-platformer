@@ -9,8 +9,9 @@ function controls()
   p.jump = btn(4)
 
   if not p.is_searching then
-    if btn(5) and p.can_fire then
+    if btn(5) and p.can_fire and p.bullets_to_fire > 0 then
       p.just_fired=1
+      p.bullets_to_fire -= 1
       sfx(4)
       local x_offs=p.lr_dir=='l' and -6 or 6
       local b = Bullet:new(p.px+x_offs,p.py+1,p.lr_dir=='r')
@@ -72,11 +73,11 @@ function controls()
       p.fuel = max(0,p.fuel-1)
       create_jump_particles(p.lr_dir)
       sfx(0)
-      p.vy=1.0
+      p.vy=0.5 --1.0
       p.jumpcheck=true
       p.isjumping=true
       p.jtm=12
-      p.accy=0.05
+      p.accy=0.1 --0.05
     end
   end
 

@@ -53,4 +53,14 @@ function Bullet:draw()
 end
 
 
+function check_collision_w_bullets_reload()
+  local x = p.px - mx
+  local y = p.py - my
 
+  if flag(x,y,3)
+    or flag(x+7,y,3)
+    or flag(x,y+7,3)
+    or flag(x+7,y+7,3) then
+    p.bullets_to_fire = 3
+  end
+end

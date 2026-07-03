@@ -1,10 +1,6 @@
 Enemy={
   init_px=0,
   init_py=0,
-  map_x=0,
-  map_y=0,
-  px=0,
-  py=0,
   vx=0,
   vy=0,
   spr=0,
@@ -12,6 +8,8 @@ Enemy={
   spr_c=0
 }
 Enemy.__index=Enemy
+
+setmetatable(Enemy,Entity)
 
 function Enemy:new(px,py,tile_x,tile_y,vx,vy)
   local entity = { init_px=px, init_py=py, map_x=tile_x*8, map_y=tile_y*8, px=px, py=py, vx=vx, vy=vy }
@@ -144,14 +142,17 @@ function generate_entities()
         local new_enemy = Robot:new((x+1)*8-128,(y+1)*8-24,x,y,rnd(velocities),0)
         mset(x,y,0)
         add(enemies, new_enemy)
-      end
-      if fget(tile, 6) then
+      elseif fget(tile, 6) then
         local new_c = Computer:new((x+1)*8-128,(y+1)*8-24,x,y)
         mset(x,y,0)
         mset(x+1,y,0)
         mset(x,y+1,0)
         mset(x+1,y+1,0)
         add(computers, new_c)
+      elseif fget(tile, 3) then
+        local new_p = Pickup:new((x+1)*8-128,(y+1)*8-24,x,y)
+        mset(x,y,0)
+        add(pickups, new_p)
       end
     end
   end

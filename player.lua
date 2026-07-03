@@ -24,6 +24,8 @@ Player = {
   is_searching=false,
   cp_selected=nil,
   is_dead=false,
+  bullets_to_fire=3,
+  reload_bullets=0
 }
 
 Player.__index = Player
@@ -111,6 +113,7 @@ function player_dies()
     p.onground=true
     mx=mx_init
     my=my_init+1
+    p.bullets_to_fire = 3
   end
 end
 
