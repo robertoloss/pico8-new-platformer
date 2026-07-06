@@ -128,7 +128,7 @@ function check_if_bullet_hit_enemies()
     end
   end
 end
-
+debugcp=""
 function generate_entities()
   local map_width = 128
   local map_height = 128
@@ -137,22 +137,30 @@ function generate_entities()
 
   for x = 0, map_width - 1 do
     for y = 0, map_height - 1 do
+      local px,py,tile_x,tile_y=(x+1)*8-128,(y+1)*8-24,x,y
       local tile = mget(x, y)
       if fget(tile, 1) then
-        local new_enemy = Robot:new((x+1)*8-128,(y+1)*8-24,x,y,rnd(velocities),0)
+        local new_enemy = Robot:new(px,py,tile_x,tile_y,rnd(velocities),0)
         mset(x,y,0)
         add(enemies, new_enemy)
       elseif fget(tile, 6) then
-        local new_c = Computer:new((x+1)*8-128,(y+1)*8-24,x,y)
+        local new_c = Computer:new(px,py,tile_x,tile_y)
         mset(x,y,0)
         mset(x+1,y,0)
         mset(x,y+1,0)
         mset(x+1,y+1,0)
         add(computers, new_c)
       elseif fget(tile, 3) then
-        local new_p = Pickup:new((x+1)*8-128,(y+1)*8-24,x,y)
+        local new_p = Pickup:new(px,py,tile_x,tile_y)
         mset(x,y,0)
         add(pickups, new_p)
+      elseif fget(tile, 4) then
+        local new_cp = Checkpoint:new(px,py,tile_x,tile_y)
+        add(checkpoints, new_cp)
+        new_cp.id = x.."-"..y
+        if x==24 and y==11 then
+          spawn.cp_active=new_cp.id
+        end
       end
     end
   end

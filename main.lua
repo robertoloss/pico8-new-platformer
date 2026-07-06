@@ -4,12 +4,14 @@ function _init()
 	my_init=-1-(8*2)
 	mx=-128
 	my=-1-(8*2)
+  spawn={x=65-mx,y=70-my}
   bullets={}
   particles={}
   enemies={}
   pickups={}
   del_enemies={}
   computers={}
+  checkpoints={}
   generate_entities()
 end
 
@@ -50,8 +52,11 @@ function _update60()
 
   update_particles()
   del_particles()
+
   move_particles()
+  move_checkpoints()
   computers_move()
+
   check_if_bullet_hit_enemies()
   check_can_search()
   is_player_searching()
@@ -65,6 +70,8 @@ function _draw()
 
   cls()
 
+  spawn_particles()
+
   draw_background(p.is_dead)
   map(0,0,mx,my,16-ntx,16-nty)
 
@@ -72,6 +79,7 @@ function _draw()
   draw_enemies(p.is_dead)
   draw_del_enemies()
   draw_pickups()
+  --draw_checkpoints()
 
   if not p.is_dead then
     p:draw()
@@ -88,7 +96,7 @@ function _draw()
         )
         local j=0
         local vb = 63
-        for i=1,p.bullets_to_fire do
+        for _=1,p.bullets_to_fire do
           if p.lr_dir=='l' then
             pset(65+j,vb,3)
           else
@@ -106,6 +114,7 @@ function _draw()
       b:draw()
     end
     check_collision_w_bullets_reload()
+    check_checkpoints_collision()
 
     draw_particles()
     draw_can_search()
