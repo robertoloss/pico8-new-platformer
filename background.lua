@@ -38,3 +38,27 @@ function draw_background(p_is_dead)
     y+=step
   end
 end
+
+
+function draw_borders()
+  if mx > 0 then
+    for j=0,120 do
+      for i=1,8 do
+        spr(1,mx-(8*i),my-48+(j*8))
+      end
+    end
+  end
+  if my>0 then
+    for j=0,120 do
+      for i=1,8 do
+        spr(1,mx-48+(8*j),my-(i*8))
+      end
+    end
+  end
+end
+
+
+
+
+
+

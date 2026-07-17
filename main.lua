@@ -53,7 +53,6 @@ function _update60()
   update_particles()
   del_particles()
 
-  move_particles()
   move_checkpoints()
   computers_move()
 
@@ -70,9 +69,11 @@ function _draw()
 
   cls()
 
+
   spawn_particles()
 
   draw_background(p.is_dead)
+  draw_borders()
   map(0,0,mx,my,16-ntx,16-nty)
 
   draw_computers()

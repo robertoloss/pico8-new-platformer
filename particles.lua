@@ -69,12 +69,10 @@ function Particle:new(args)
   return newp
 end
 
+
 function Particle:update()
   self.vx+=self.inc_x
   self.vy+=self.inc_y
-end
-
-function Particle:move()
   self.count += 1
   if self.count >= self.lim then
     self.dead=true
@@ -99,12 +97,6 @@ end
 function update_particles()
   for _,p in ipairs(particles) do
     p:update()
-  end
-end
-
-function move_particles()
-  for _,p in ipairs(particles) do
-    p:move()
   end
 end
 

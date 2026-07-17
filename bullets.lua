@@ -44,7 +44,32 @@ function Bullet:collision(idx)
   local crb = fget(mget(flr((px+5)/8),flr((py+6)/8)),0)
 
   if clt or clb or crt or crb then
+    sfx(8)
     deli(bullets,idx)
+    create_bullet_particles(self)
+  end
+end
+
+function create_bullet_particles(bullet)
+  for _ = 1,25 do
+    local vxr = rnd({0.3,0.4,0.5})
+    local particle = Particle:new({
+      map_x=bullet.px - mx + (bullet.right and 4 or 4),
+      map_y=bullet.py - my +3,
+      py=bullet.py,
+      px=bullet.px,
+      vy=rnd({0.3,0.4,0.2}),
+      vx=bullet.right and -vxr or vxr,
+      inc_y=rnd({-0.03,-0.02}),
+      inc_x=bullet.right and rnd({0.01,0.02}) or rnd({-0.01,-0.02}),
+      lim=10,
+      kind="bullet",
+      p_dir=bullet.right and "right" or "left",
+      col=rnd({1,1,2}),
+      dead=false,
+      count=0
+    })
+    add(particles,particle)
   end
 end
 

@@ -101,7 +101,9 @@ function Robot:bullet(b)
       c=0
     }
     add(del_enemies,dt)
+    sfx(9)
     del(bullets,b)
+    create_bullet_particles(b)
   end
 end
 
@@ -128,7 +130,8 @@ function check_if_bullet_hit_enemies()
     end
   end
 end
-debugcp=""
+
+
 function generate_entities()
   local map_width = 128
   local map_height = 128
